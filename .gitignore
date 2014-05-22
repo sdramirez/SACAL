@@ -1,0 +1,8 @@
+/bower_components
+/node_modules
+/styles/
+/scripts/
+/src/scripts/constants.js
+/fonts/
+/build/
+/.sass-cache
