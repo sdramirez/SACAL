@@ -8,11 +8,38 @@
 	<title>SACAL</title>
 </head>
 <body>
+<!-- <ng-include src="'views/quote-info.html'"/> -->
 <div class="container" ng-app="sacalApp" ng-controller="MainCtrl">
-	<div class="row">
-		<div ui-view></div>
-	</div>
-	<!-- <ng-include src="'views/quote-info.html'"/> -->
+  <div ng-if="isState('login')">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 header">
+      <h2>SACAL</h2>
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 contenidoApp" ui-view></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 footer">
+        <p class="text-right">Derechos Resevados 2014 &#169; SACAL</p>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!isState('login')">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header">
+      <h2>SACAL</h2>
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenidoApp" ui-view></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 footer">
+        <p class="text-right">Derechos Resevados 2014 &#169; SACAL</p>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 <script src="scripts/angular.js"></script>
