@@ -2,57 +2,79 @@ var sacalApp = angular.module("sacalApp",[
   'ui.router',
   'ui.bootstrap'
 ]);
-
-sacalApp.config(function($stateProvider) {
-
+sacalApp.config(function($stateProvider,$urlRouterProvider) {
+  $urlRouterProvider.otherwise('/Login');
   $stateProvider
-
-  .state("home", {
-    url: "/Home/:userType",
-    templateUrl: 'views/Home.html',
-    controller: 'HomeCtrl'
-  })
   .state("login", {
-  	url: "/Login",
-  	templateUrl: 'views/Login.html',
-  	controller: 'LoginCtrl'
+    url: "/Login",
+    templateUrl: 'views/Login.html',
+    controller: 'LoginCtrl'
   })
-
+  .state('docente',{
+      url: '/Docente',
+      controller: 'DocenteCtrl',
+      views:
+      {
+          'menuApp':{
+              templateUrl: 'views/Docente/DocenteMenu.html',
+              controller: 'DocenteCtrl'
+          },
+          '':{
+              templateUrl: 'views/Docente/DocenteMain.html',
+              controller: 'DocenteCtrl'
+          }
+      }
+  })
+  .state('docente.reservar', {
+      url: '/Reservar',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Docente/Reservar.html',
+              controller: 'ReservarDocenteCtrl'
+          }
+      }
+  })
+  .state('docente.control', {
+      url: '/Control',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Docente/Control.html',
+              controller: 'ControlDocenteCtrl'
+          }
+      }
+  });
 });
-
-sacalApp.controller("MainCtrl", function ($rootScope,$scope,$location,$stateParams,$state) {
-  $location.path("/Login");
-  
-  $scope.isState = function(path){
+sacalApp.controller("MainCtrl", function ($rootScope,$scope,$state,$location) {
+  $scope.isLogin = function(path){
     return $state.is(path);
-  }
-
-});
-
-sacalApp.controller("LoginCtrl", function ($rootScope,$scope,$location,$stateParams) {
-
-  $scope.login = function(){
-    $location.path("/Home/Docente");
   };
-
+  $scope.singOut = function(){
+    $location.path("/Login");
+  };
 });
-
-sacalApp.controller("HomeCtrl", function ($rootScope,$scope,$location,$stateParams,callToWebService) {
-  var userType = $stateParams.userType;
-  // $scope.llamado = true;
-  //  $scope.$watch("llamado", function () {
-  //   callToWebService.postCall('/Reservar', {},
-  //     function sucess(data){
-  //       debugger;
-  //       alert(1);
-  //     },
-  //     function error(data){
-  //       alert(0);
-  //     });
-  // }, true);
-  
+sacalApp.controller("LoginCtrl", function ($rootScope,$scope,$location) {
+  $scope.login = function(){
+    $location.path("/Docente/Reservar");
+  };
 });
-
+sacalApp.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location) {
+  $location.path("/Docente/Reservar");
+  $scope.menuActivo = function(path){
+    return $state.is(path);
+  };
+  $scope.Link = function(url){
+    $location.path(url);
+  };
+});
+sacalApp.controller("ReservarDocenteCtrl", function ($rootScope,$scope) {
+  $scope.labDisponibles = [{Nombre:'Todos'},{Nombre:'Lab I'},{Nombre:'Lab II'},
+  {Nombre:'Diseño'},{Nombre:'Desarrollo'}];
+  $scope.opcSelect = 'Todos';
+});
+sacalApp.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
+});
 sacalApp.service('callToWebService', [
   '$http', '$state',
   function ($http, $state) {
@@ -70,4 +92,4 @@ sacalApp.service('callToWebService', [
           
         });
     };
-}])
+}]);
