@@ -1,7 +1,10 @@
 .login{
 	padding:40px 70px;
+	color:#888;
 	form{
-		legend{color:#888;}
-		div{margin:15px 0;}
+		div{
+			margin:15px 0;
+			a{margin-top:10px;display:block;}
+		}
 	}
 }

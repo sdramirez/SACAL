@@ -1,6 +1,6 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 reservarDoncente">
 	<div class="btn-group pull-right">
-		<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Ver: <strong>{{opcSelect}}</strong><span class="caret"></span></a>
+		<a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">Ver: <strong>{{opcSelect}} </strong><span class="caret"></span></a>
 		<ul class="dropdown-menu">
 			<li ng-repeat="lab in labDisponibles">
 				<a href="">{{lab.Nombre}}</a>
@@ -8,7 +8,31 @@
 		</ul>
 	</div>
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenedorLabs">
-		<h4 class="pull-left">Laboratorio I TICS</h4>
-		
+		<h4 class="pull-left">Laboratorio I</h4>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenedorLabs">
+			<table class="table table-bordered pull-left horasTable">
+				<thead>
+					<tr><th>Dias / Horas</th></tr>
+					<tr ng-repeat="h in horas">
+						<th>{{h.Hor}}</th>
+					</tr>
+				</thead>
+			</table>
+			<table class="table pull-right diasTable">
+				<thead>
+					<tr>
+						<th ng-repeat="d in dias">{{d.Dia}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in dataHoras">
+						<td ng-repeat="col in row.Dias" ng-class="{'danger':col.esReservado}">
+							<a href="" ng-show="col.esReservadoOwner">Cancelar</a>
+							<a href="" ng-show="col.esReservado">Reservado</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>

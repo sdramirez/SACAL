@@ -2,10 +2,6 @@ body {
     /* ------- PERSONALIZAR ESTILOS ------ */
     h1,h2,h3,h4,h5,label,p{margin:0;}
     .row{ margin: 0; padding: 0; }
-    .btn{
-    	background-color:#339642;
-    	&:hover{background-color:#339642;}
-    }
     input{
     	display: block;
 		width: 100%;
@@ -41,7 +37,8 @@ body {
 	    padding:10px 5px;
     }
     .menuActivo{
-        background-color:#339642 !important;
+        background-color:#5cb85c !important;
+        &:hover{background-color:#47a447;}
     }
     /* ------ END CSS PARA MASTER PAGE ----- */
 }
