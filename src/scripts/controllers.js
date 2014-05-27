@@ -24,7 +24,7 @@ sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$l
     $location.path(url);
   };
 });
-sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope) {
+sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$modal) {
   $scope.labDisponibles = [{Nombre:'Todos'},{Nombre:'Laboratorio I'},{Nombre:'Lab II'},
   {Nombre:'Diseño'},{Nombre:'Desarrollo'}];
   $scope.opcSelect = 'Laboratorio I';
@@ -55,21 +55,43 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope) 
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},{esReservado:false},{esReservado:false}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]}];
-  //$scope.datos = [{esReservado:true,esReservadoOwner:true}];
+  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},
+  {esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]}];
+  //19 registros debe traer la consulta para que funcione :p
+
+  $scope.infoPopOver = function (p,i) {
+      var modalInstance = $modal.open({
+          templateUrl: 'views/Docente/Modal/info.html',
+          controller: infoCtrl,
+          windowClass: 'modal-info',
+          resolve: {
+              datos: function () {
+                  return $scope.dataHoras[p].Dias[i];
+              }
+          }
+      });
+    };
+
+    var infoCtrl = function ($scope, $modalInstance, datos) {
+        $scope.infor = datos;
+        $scope.closeProveedorModal = function (respuesta) {
+            $modalInstance.dismiss();
+        };
+    };
+
 });
 sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
 });

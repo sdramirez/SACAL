@@ -53,13 +53,27 @@
 			vertical-align: middle;
 			border: 1px solid #ddd !important;
 		}
+		.reservadoRed{background:#d9534f; }
+		.reservadoBlue{background:#5bc0de; }
+		.disponible{background:#5cb85c;}
 		tbody tr td{
 			height: 50px;
 			text-align:center;
 			vertical-align: middle;
 			border: 1px solid #ddd !important;
-			&:hover{background-color:#EEE;}
 			width:18%;
+			span{color:#FFF;
+				&:hover{
+					font-size:16px; 
+					text-decoration:underline;
+					cursor:pointer;
+					font-weight: bold;
+				}
+			}
 		}
 	}
+}
+
+.modal-info{
+	color:#888;
 }
