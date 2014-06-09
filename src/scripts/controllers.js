@@ -53,9 +53,15 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Horas:2,Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
+  {Horas:2,Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
+  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},
+  {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'}]},
   {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
@@ -77,6 +83,7 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$
           templateUrl: 'views/Docente/Modal/info.html',
           controller: infoCtrl,
           windowClass: 'modal-info',
+          backdrop: 'static',
           resolve: {
               datos: function () {
                   return $scope.dataHoras[p].Dias[i];
@@ -85,13 +92,86 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$
       });
     };
 
+    $scope.confirmar = function (p,i) {
+      var modalInstance = $modal.open({
+          templateUrl: 'views/Docente/Modal/confirmar.html',
+          controller: confirmarCtrl,
+          windowClass: 'modal-confirmar',
+          backdrop: 'static',
+          resolve: {
+              datos: function () {
+                  return $scope.dataHoras[p].Dias[i];
+              }
+          }
+      });
+    };
+
+    $scope.cancelar = function (p,i) {
+      var modalInstance = $modal.open({
+          templateUrl: 'views/Docente/Modal/cancelar.html',
+          controller: cancelarCtrl,
+          windowClass: 'modal-cancelar',
+          backdrop: 'static',
+          resolve: {
+              datos: function () {
+                  return $scope.dataHoras[p].Dias[i];
+              }
+          }
+      });
+    };
+
+    var cancelarCtrl = function($scope, $modalInstance, datos){      
+      $scope.close = function () {
+        $modalInstance.dismiss();
+      };
+      $scope.cancelar = function () {
+        datos.esReservado = false;
+        datos.esReservadoOwner = false;
+        $modalInstance.dismiss();
+      };
+    };
+
+    var confirmarCtrl = function($scope, $modalInstance, datos){      
+      $scope.close = function () {
+        $modalInstance.dismiss();
+      };
+      $scope.reservar = function () {
+        datos.esReservado = true;
+        datos.esReservadoOwner = true;
+        $modalInstance.dismiss();
+      };
+    };
+
     var infoCtrl = function ($scope, $modalInstance, datos) {
         $scope.infor = datos;
-        $scope.closeProveedorModal = function (respuesta) {
+        $scope.close = function () {
             $modalInstance.dismiss();
         };
     };
 
 });
 sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
+  $scope.puerta = true;
+  $scope.controlPuerta = function(bool){
+    $scope.puerta = bool;
+  };
+  $scope.proyector = true;
+  $scope.controlProyect = function(bool){
+    $scope.proyector = bool;
+  };
+  $scope.compu = true;
+  $scope.controlCompu = function(bool){
+    $scope.compu = bool;
+  };
+  $scope.luz = true;
+  $scope.controlLuz = function(bool){
+    $scope.luz = bool;
+  };
+  $scope.aire = true;
+  $scope.controlAire = function(bool){
+    $scope.aire = bool;
+  };
+});
+sacalControllers.controller("ReporteDocenteCtrl", function($rootScope,$scope){
+  
 });

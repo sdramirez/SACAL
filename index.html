@@ -12,22 +12,31 @@
 <div class="container" ng-app="sacalApp" ng-controller="MainCtrl">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 headerApp">
-      <h1>SACAL <span ng-if="isLogin('login')" class="pull-right">Universidad Tecnologica de Tijuana</span>
-        <p ng-if="!(isLogin('login'))" class="pull-right">
-          <button class="btn btn-success">Daniel Torres</button>
-          <button class="btn btn-success" ng-click="singOut()">Cerrar Sesi&oacute;n</button>
-        </p></h1>
+      <h1 ng-if="!(isLogin('login'))">SACAL
+        <div class="btn-group pull-right">
+          <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">Daniel Torres <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="">Cambiar contraseña</a>
+            </li>
+             <li ng-click="singOut()">
+              <a href="">Cerrar Sesi&oacute;n</a>
+            </li>
+          </ul>
+        </div>
+      </h1>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 menuApp" ui-view="menuApp" ng-if="!(isLogin('login'))"></div>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenidoApp" ui-view=""></div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenidoApp" ui-view="" ng-if="!(isLogin('login'))"></div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ui-view="" ng-if="isLogin('login')"></div>
   </div>
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 footerApp">
-      <p class="text-right">Derechos Resevados 2014 &#169; SACAL</p>
+      <p ng-if="!(isLogin('login'))" class="text-right">Derechos Resevados 2014 &#169; SACAL</p>
     </div>
   </div>
 </div>

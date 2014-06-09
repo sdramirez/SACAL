@@ -45,6 +45,16 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
               controller: 'ControlDocenteCtrl'
           }
       }
+  })
+  .state('docente.reporte', {
+      url: '/Reportes',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Docente/Reportes.html',
+              controller: 'ReporteDocenteCtrl'
+          }
+      }
   });
 });
 sacalApp.service('callToWebService', [
