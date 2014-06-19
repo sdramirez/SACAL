@@ -55,6 +55,31 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
               controller: 'ReporteDocenteCtrl'
           }
       }
+  })
+  .state('admin',{
+      url: '/Admin',
+      controller: 'AdminCtrl',
+      views:
+      {
+          'menuApp':{
+              templateUrl: 'views/Admin/AdminMenu.html',
+              controller: 'AdminCtrl'
+          },
+          '':{
+              templateUrl: 'views/Admin/AdminMain.html',
+              controller: 'AdminCtrl'
+          }
+      }
+  })
+  .state('admin.registro', {
+      url: '/Registro',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Registro.html',
+              controller: 'RegistroAdminCtrl'
+          }
+      }
   });
 });
 sacalApp.service('callToWebService', [
@@ -75,11 +100,3 @@ sacalApp.service('callToWebService', [
         });
     };
 }]);
-sacalApp.filter('range', function() {
-  return function(input, total) {
-    total = parseInt(total);
-    for (var i=0; i<total; i++)
-      input.push(i);
-    return input;
-  };
-});

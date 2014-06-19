@@ -1,12 +1,35 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
-sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location) {
+sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
   $scope.isLogin = function(path){
     return $state.is(path);
   };
   $scope.singOut = function(){
     $location.path("/Login");
   };
+  $scope.newPass = function(){
+
+    $location.path("/Login");
+  };
+
+  $scope.changePassword = function () {
+      var modalInstance = $modal.open({
+          templateUrl: 'views/Modal/changePassword.html',
+          controller: changePasswordCtrl,
+          windowClass: 'modal-cancelar',
+          backdrop: 'static'
+      });
+    };
+
+    var changePasswordCtrl = function($scope, $modalInstance){      
+      $scope.close = function () {
+        $modalInstance.dismiss();
+      };
+      $scope.newPassword = function () {
+        
+      };
+    };
+
 });
 sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location) {
   $scope.lost = false;
