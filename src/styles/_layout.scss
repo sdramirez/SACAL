@@ -20,6 +20,20 @@ body {
 		border-radius: 4px;
 		&:focus{box-shadow: 0 0 5px #028FBE; outline:0;}
     }
+    select{
+        //-webkit-appearance: none;
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #888;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        &:focus{box-shadow: 0 0 5px #028FBE; outline:0;}
+    }
     /* ------- END PERSONALIZAR ESTILOS ------ */
     
     /* ------ CSS PARA MASTER PAGE ----- */
@@ -27,8 +41,9 @@ body {
     background-color: #028FBE;
     color: white;
     .footerApp, .headerApp{padding:0;}
-    .headerApp div{
-        .dropdown-menu li a:hover{
+    .headerApp{ 
+        h1,div{padding:0;}
+        div.dropdown-menu li a:hover{
             background-color: #339642;
             color: #FFF;
         }
@@ -53,6 +68,10 @@ body {
     }
     .menuActivo{
         background-color:#5cb85c !important;
+    }
+    .rowSelec{
+        background-color:#5cb85c;
+        color:#FFF;
     }
     /* ------ END CSS PARA MASTER PAGE ----- */
 }

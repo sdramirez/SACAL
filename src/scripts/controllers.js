@@ -2,11 +2,11 @@ var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
 
-  $scope.alerts = [];
-  $scope.alerts.push({
-    msg: 'Another alert!',
-    type: 'error'
-  });
+  // $scope.alerts = [];
+  // $scope.alerts.push({
+  //   msg: 'Another alert!',
+  //   type: 'error'
+  // });
 
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
@@ -46,7 +46,7 @@ sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location) 
   $scope.lost = false;
   $scope.sendEmail = false;
   $scope.login = function(){
-    $location.path("/Docente/Reservar");
+    $location.path("/Admin");
   };
 });
 sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location) {
@@ -220,7 +220,46 @@ sacalControllers.controller("AdminCtrl", function($rootScope,$scope,$location,$s
   };
 });
 sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope){
-  
+  $scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A'},
+  {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A'}];
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+
+  $scope.addAlumno = function(form){
+    if($scope.editar){
+      $scope.deleteAlumno();
+    }
+    $scope.alumnos.push({
+      matricula: form.matricula.$viewValue,
+      nombre: form.name.$viewValue,
+      password: form.password.$viewValue,
+      grupo: form.grupo.$viewValue
+    });
+    
+    $scope.matricula = '';
+    $scope.name = '';
+    $scope.password = '';
+    $scope.grupo = '';
+  };
+
+  $scope.deleteAlumno = function(){
+      $scope.alumnos.splice($scope.rowSelec,1);
+      $scope.rowSelec = -1;
+      $scope.opciones = false;
+  };
+
+  $scope.editAlumno = function(){
+    var alumno = $scope.alumnos[$scope.rowSelec];
+    $scope.matricula = alumno.matricula;
+    $scope.name = alumno.nombre;
+    $scope.password = alumno.password;
+    $scope.grupo = alumno.grupo;
+    $scope.editar = true;
+  };
+
 });
 sacalControllers.controller("MaestroAdminCtrl", function($rootScope,$scope){
   
