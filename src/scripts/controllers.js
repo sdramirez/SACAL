@@ -1,6 +1,17 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
+
+  $scope.alerts = [];
+  $scope.alerts.push({
+    msg: 'Another alert!',
+    type: 'error'
+  });
+
+  $scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
+
   $scope.isLogin = function(path){
     return $state.is(path);
   };
@@ -21,7 +32,7 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
       });
     };
 
-    var changePasswordCtrl = function($scope, $modalInstance){      
+    var changePasswordCtrl = function($scope, $modalInstance){
       $scope.close = function () {
         $modalInstance.dismiss();
       };
@@ -36,7 +47,7 @@ sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location) 
   $scope.sendEmail = false;
   $scope.login = function(){
     $location.path("/Docente/Reservar");
-  }; 
+  };
 });
 sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location) {
   $location.path("/Docente/Reservar");
@@ -143,7 +154,7 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$
       });
     };
 
-    var cancelarCtrl = function($scope, $modalInstance, datos){      
+    var cancelarCtrl = function($scope, $modalInstance, datos){
       $scope.close = function () {
         $modalInstance.dismiss();
       };
@@ -154,7 +165,7 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$
       };
     };
 
-    var confirmarCtrl = function($scope, $modalInstance, datos){      
+    var confirmarCtrl = function($scope, $modalInstance, datos){
       $scope.close = function () {
         $modalInstance.dismiss();
       };
@@ -196,5 +207,24 @@ sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
   };
 });
 sacalControllers.controller("ReporteDocenteCtrl", function($rootScope,$scope){
+  
+});
+sacalControllers.controller("AdminCtrl", function($rootScope,$scope,$location,$state){
+  
+  $location.path("/Admin/Alumno");
+  $scope.menuActivo = function(path){
+    return $state.is(path);
+  };
+  $scope.Link = function(url){
+    $location.path(url);
+  };
+});
+sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope){
+  
+});
+sacalControllers.controller("MaestroAdminCtrl", function($rootScope,$scope){
+  
+});
+sacalControllers.controller("MateriaAdminCtrl", function($rootScope,$scope){
   
 });
