@@ -71,13 +71,33 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
           }
       }
   })
-  .state('admin.registro', {
-      url: '/Registro',
+  .state('admin.alumno', {
+      url: '/Alumno',
       views:
       {
           '@':{
-              templateUrl: 'views/Admin/Registro.html',
-              controller: 'RegistroAdminCtrl'
+              templateUrl: 'views/Admin/Alumno.html',
+              controller: 'AlumnoAdminCtrl'
+          }
+      }
+  })
+  .state('admin.maestro', {
+      url: '/Maestro',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Maestro.html',
+              controller: 'MaestroAdminCtrl'
+          }
+      }
+  })
+  .state('admin.materia', {
+      url: '/Materia',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Materia.html',
+              controller: 'MateriaAdminCtrl'
           }
       }
   });
