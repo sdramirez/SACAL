@@ -12,6 +12,9 @@
       		<input type="password" name="password" placeholder="Contrase&ntilde;a" ng-model="password" required>
     	</div>
       <div>
+          <input type="password" name="confirmPassword" placeholder="Confirmar contrase&ntilde;a" ng-model="confirmPassword" required>
+      </div>
+      <div>
         <select name="grupo" ng-model="grupo" required>
           <option value="">Seleccione un grupo</option>
           <option value="1-A">1-A</option>
@@ -23,7 +26,7 @@
         </select>
       </div>
     	<div class="text-right">
-      		<button ng-hide="editar" class="btn btn-success" ng-click="addAlumno(formAlumno)" ng-disabled="formAlumno.$invalid">Registrar</button>
+      		<button ng-hide="editar" class="btn btn-success" ng-click="addAlumno(formAlumno)" ng-disabled="formAlumno.$invalid">Guardar</button>
           <button ng-show="editar" class="btn btn-success" ng-click="addAlumno(formAlumno)" ng-disabled="formAlumno.$invalid">Editar</button>
     	</div>
   </form>

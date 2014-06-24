@@ -2,11 +2,7 @@ var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
 
-  // $scope.alerts = [];
-  // $scope.alerts.push({
-  //   msg: 'Another alert!',
-  //   type: 'error'
-  // });
+  $scope.alerts = [];
 
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
@@ -219,9 +215,9 @@ sacalControllers.controller("AdminCtrl", function($rootScope,$scope,$location,$s
     $location.path(url);
   };
 });
-sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope){
-  $scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A'},
-  {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A'}];
+sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope,$timeout){
+  $scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A',confirmPassword:'123456'},
+  {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A',confirmPassword:'jperez'}];
  
   $scope.select = function(i){
     $scope.rowSelec = i;
@@ -229,20 +225,34 @@ sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope){
   };
 
   $scope.addAlumno = function(form){
-    if($scope.editar){
-      $scope.deleteAlumno();
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){  
+      if($scope.editar){
+        $scope.deleteAlumno();
+      }
+      $scope.alumnos.push({
+        matricula: form.matricula.$viewValue,
+        nombre: form.name.$viewValue,
+        password: form.password.$viewValue,
+        grupo: form.grupo.$viewValue,
+        confirmPassword: form.confirmPassword.$viewValue
+      });
+      
+      $scope.matricula = '';
+      $scope.name = '';
+      $scope.password = '';
+      $scope.grupo = '';
+      $scope.confirmPassword = '';
     }
-    $scope.alumnos.push({
-      matricula: form.matricula.$viewValue,
-      nombre: form.name.$viewValue,
-      password: form.password.$viewValue,
-      grupo: form.grupo.$viewValue
-    });
-    
-    $scope.matricula = '';
-    $scope.name = '';
-    $scope.password = '';
-    $scope.grupo = '';
+    else{
+      $scope.$parent.$parent.alerts = [];
+      $scope.$parent.$parent.alerts.push({
+        msg: 'Las contrase\u00f1as deben ser iguales',
+        type: 'error'
+      });
+      $timeout(function(){
+        $scope.$parent.$parent.alerts = [];
+      }, 5000);
+    }
   };
 
   $scope.deleteAlumno = function(){
@@ -257,13 +267,70 @@ sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope){
     $scope.name = alumno.nombre;
     $scope.password = alumno.password;
     $scope.grupo = alumno.grupo;
+    $scope.confirmPassword = alumno.confirmPassword;
     $scope.editar = true;
   };
 
 });
-sacalControllers.controller("MaestroAdminCtrl", function($rootScope,$scope){
-  
+sacalControllers.controller("MaestroAdminCtrl", function($rootScope,$scope,$timeout){
+
+  $scope.empleados = [{noEmpleado:'AD41',nombre:'Jose Perez',password:'564',typeUser:'Docente',confirmPassword:'564', materia:'Web'},
+  {noEmpleado:'CV85',nombre:'Predro Mendez',password:'pm',typeUser:'Admin',confirmPassword:'pm', materia:''}];
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+
 });
 sacalControllers.controller("MateriaAdminCtrl", function($rootScope,$scope){
+  $scope.materia = [{nombre:'Web',maestro:'Luis Lopez'},{nombre:'Android',maestro:'Daniel Jose'}];
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+});
+sacalControllers.controller("GrupoAdminCtrl", function($rootScope,$scope){
+  $scope.grupo = [{nombre:'1-A',inicio:'2014-01-06',fin:'2014-04-25'},
+  {nombre:'3-A',inicio:'2014-01-06',fin:'2014-04-25'}];
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+
+});
+sacalControllers.controller("LaboratorioAdminCtrl", function($rootScope,$scope){
+  $scope.labs = [{nombre:'Multimedia',noCompu:20},
+  {nombre:'Desarrollo I',noCompu:22}];
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+});
+sacalControllers.controller("ReservarAdminCtrl", function($rootScope,$scope){
+  
+});
+sacalControllers.controller("HoraAdminCtrl", function($rootScope,$scope){
+  $scope.hora=[{inicio:'7:00', fin:'7:50'},{inicio:'7:50',fin:'8:40'},
+  {inicio:'8:40',fin:'9:30'},{inicio:'9:30',fin:'10:20'}];
+  $scope.dia=[{Dia:"Lunes"},{Dia:"Martes"},{Dia:"Miercoles"},{Dia:"Jueves"},
+  {Dia:"Viernes"}];
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+   $scope.select2 = function(i){
+    $scope.rowSelec2 = i;
+    $scope.opciones2 = true;
+  };
+
+});
+sacalControllers.controller("ControlAdminCtrl", function($rootScope,$scope){
+  
+});
+sacalControllers.controller("ClaseAdminCtrl", function($rootScope,$scope){
   
 });

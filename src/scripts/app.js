@@ -100,6 +100,66 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
               controller: 'MateriaAdminCtrl'
           }
       }
+  })
+  .state('admin.grupo', {
+      url: '/Grupo',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Grupo.html',
+              controller: 'GrupoAdminCtrl'
+          }
+      }
+  })
+  .state('admin.laboratorio', {
+      url: '/Laboratorio',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Laboratorio.html',
+              controller: 'LaboratorioAdminCtrl'
+          }
+      }
+  })
+  .state('admin.reservar', {
+      url: '/Reservar',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Reservar.html',
+              controller: 'ReservarAdminCtrl'
+          }
+      }
+  })
+  .state('admin.hora', {
+      url: '/Hora',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Hora.html',
+              controller: 'HoraAdminCtrl'
+          }
+      }
+  })
+  .state('admin.control', {
+      url: '/Control',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Control.html',
+              controller: 'ControlAdminCtrl'
+          }
+      }
+  })
+  .state('admin.clase', {
+      url: '/Clase',
+      views:
+      {
+          '@':{
+              templateUrl: 'views/Admin/Clase.html',
+              controller: 'ClaseAdminCtrl'
+          }
+      }
   });
 });
 sacalApp.service('callToWebService', [

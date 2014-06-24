@@ -1,7 +1,7 @@
 .menuDocente{
 	padding:0;
 	ul{
-		padding:0 0 5px 0; 
+		padding:0; 
 		margin:0;
 		.opcionesMenu{
 			padding:20px;
@@ -13,10 +13,9 @@
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			height: 60px;
-			&:nth-child(2),&:nth-child(3){
-				border-left:5px solid #028FBE;
-			}
+			margin-bottom: 5px;
 		}
+		.border{border-left:5px solid #028FBE;}
 	}
 }
 .reservarDoncente{
