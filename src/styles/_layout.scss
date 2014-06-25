@@ -43,7 +43,7 @@ body {
     .footerApp, .headerApp{padding:0;}
     .headerApp{ 
         h1,div{padding:0;}
-        div.dropdown-menu li a:hover{
+        ul.dropdown-menu li a:hover{
             background-color: #339642;
             color: #FFF;
         }

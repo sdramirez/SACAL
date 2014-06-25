@@ -3,6 +3,7 @@ var sacalControllers = angular.module('sacalControllers', []);
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
 
   $scope.alerts = [];
+  $scope.userName = '';
 
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
@@ -38,14 +39,50 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
     };
 
 });
-sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location) {
+sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,$http,$timeout) {
   $scope.lost = false;
   $scope.sendEmail = false;
-  $scope.login = function(){
-    $location.path("/Admin");
+  $scope.login = function(f){
+    var url = "services/login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
+    $http({method: 'GET', url: url})
+    .success(function(data, status, headers, config) {
+      if(data != "null"){
+        $scope.datos = data;
+        $scope.$parent.$parent.userName = $scope.datos.usu_nombre;
+        switch($scope.datos.usu_tipo_usuario_id) {
+          case "1":
+                $location.path("/Admin");
+              break;
+          case "2":
+                $location.path("/Docente");
+              break;
+          case "3":
+                $location.path("/Alumno");
+              break;
+          }
+      }
+      else{
+        $scope.$parent.$parent.alerts = [];
+        $scope.$parent.$parent.alerts.push({
+          msg: 'Usuario o contrase\u00f1a incorrectos',
+          type: 'error'
+        });
+        $timeout(function(){
+          $scope.$parent.$parent.alerts = [];
+        }, 5000);
+      }
+    })
+    .error(function(data, status, headers, config) {
+      
+    });
+    
   };
+
 });
-sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location) {
+sacalControllers.controller("AlumnoCtrl", function($rootScope,$scope){
+  
+});
+sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location) { 
   $location.path("/Docente/Reservar");
   $scope.menuActivo = function(path){
     return $state.is(path);

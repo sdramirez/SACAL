@@ -1,28 +1,28 @@
 <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 login">
-  <form action="" method="POST" role="form" ng-hide="lost">
+  <form name="formLogin" novalidate ng-hide="lost">
     <legend>Iniciar Sesi&oacute;n</legend>
     <div>
-      <input type="text" id="username" placeholder="Nombre de usuario" autocomplete="off">
+      <input type="text" name="username" ng-model="username" placeholder="Matricula o numero de empleado" required>
     </div>
     <div>
-      <input type="password" id="password" placeholder="Contrase&ntilde;a">
+      <input type="password" name="password" ng-model="password" placeholder="Contrase&ntilde;a" required>
       <a href="" ng-click="lost = true; sendEmail = false">Olvid&eacute; mi contrase&ntilde;a</a>
     </div>
     <div class="text-right">
-      <button type="submit" class="btn btn-success" ng-click="login()">Ingresar</button>
+      <button class="btn btn-success" ng-click="login(formLogin)" ng-disabled="formLogin.$invalid">Ingresar</button>
     </div>
   </form>
-  <form action="" method="POST" role="form" ng-show="lost">
+  <form name="formContrasena" novalidate ng-show="lost">
     <legend>Restablecer Contrase&ntilde;a</legend>
     <div>
-      <input type="text" id="email" placeholder="Correo electr&oacute;nico" autocomplete="off">
+      <input type="text" name="email" ng-model="email" ng-pattern="/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/" placeholder="Correo electr&oacute;nico" required>
     </div>
     <div ng-show="sendEmail">
       <p>La nueva contrase&ntilde;a ha sido envia a su correo electr&oacute;nico</p>
     </div>
     <div class="text-right">
-      <button type="submit" class="btn btn-danger" ng-click="lost = false">Regresar</button>
-      <button type="submit" class="btn btn-success" ng-click="sendEmail = true">Enviar</button>
+      <button class="btn btn-danger" ng-click="lost = false">Regresar</button>
+      <button class="btn btn-success" ng-click="sendEmail = true" ng-disabled="formContrasena.$invalid">Enviar</button>
     </div>
   </form>
 </div>

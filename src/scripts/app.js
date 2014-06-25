@@ -11,6 +11,11 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
     templateUrl: 'views/Login.html',
     controller: 'LoginCtrl'
   })
+  .state("alumno", {
+    url: "/Alumno",
+    templateUrl: 'views/Alumno.html',
+    controller: 'AlumnoCtrl'
+  })
   .state('docente',{
       url: '/Docente',
       controller: 'DocenteCtrl',
@@ -162,21 +167,3 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
       }
   });
 });
-sacalApp.service('callToWebService', [
-  '$http', '$state',
-  function ($http, $state) {
-    this.postCall = function (endpoint, postData, succesCB, errorCB) {
-        $http({
-            method:'POST',
-            url: endpoint,
-            data: JSON.stringify(postData),
-            headers: {"Content-Type": "application/json; charset=utf-8"}
-        })
-        .success(function (data){
-
-        })
-        .error(function (data, responseCode){
-          
-        });
-    };
-}]);
