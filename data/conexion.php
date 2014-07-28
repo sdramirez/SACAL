@@ -1,28 +1,4 @@
-<?php
-	// class Conexion{
-	// 	private $dbuser;
-	// 	private $dbpassword;
-	// 	private $dbname;
-	// 	private $dbhost;
-	// 	private $mysqli = NULL;
-	
-	// 	public function __construct($dbhost, $dbuser, $dbpassword, $dbname){
-	// 		$this->dbuser = $dbuser;
-	// 		$this->dbpassword = $dbpassword;
-	// 		$this->dbname = $dbname;
-	// 		$this->dbhost = $dbhost;
-	// 		@$this->mysqli = new MySQLi($this->dbhost,$this->dbuser, $this->dbpassword, $this->dbname);
-	// 		if ($this->mysqli->connect_errno){	
-	// 			echo "Fallo conexion ".$this->mysqli->connect_error;				
-	// 		}
-	// 	}
-	// 	public function __destruct(){
-	// 		return true;
-	// 	}
-		
-
-	// }
-	//conectar al servidor de MySQL
+<?php  
 	function conectar()
 	{
 		//abrir conexi�n al servidor de MySQL

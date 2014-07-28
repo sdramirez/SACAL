@@ -166,4 +166,50 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
           }
       }
   });
-});
+}).controller('alertCtrl', function ($scope, mostrarNotificacion) {
+  $scope.notificaciones = mostrarNotificacion;
+  $scope.closeAlert = function (){
+    $scope.notificaciones.clear();
+  };
+})
+.service('mostrarNotificacion', ['$timeout', function ($timeout) {
+  var serv = {};
+
+  serv.alerts = [];
+
+  serv.error = function(msg){
+    serv.alerts = [];
+    serv.alerts.push({type:'error', msg:msg});
+    $timeout(function(){
+      serv.clear();
+    }, 10000);
+  };
+
+  serv.info = function(msg){
+    serv.alerts = [];
+    serv.alerts.push({type:'info', msg:msg});
+    $timeout(function(){
+      serv.clear();
+    }, 10000);
+  };
+
+  serv.clear = function(msg){
+    serv.alerts = [];
+  };
+
+  return serv;
+  }
+]).service('callService', ['$http', function ($http) {
+
+  this.getCall = function(nameService){
+    var url = 'services/'+nameService;
+    $http({method: 'GET', url: url})
+    .success(function(data) {
+      return data;
+    })
+    .error(function(data) {
+      return data;
+    });
+  };
+}
+]);   

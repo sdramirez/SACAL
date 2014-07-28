@@ -2,11 +2,12 @@ var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
 
-  $scope.alerts = [];
+  //$scope.alerts = [];
   $scope.userName = '';
+  debugger;
 
   $scope.closeAlert = function(index) {
-    $scope.alerts.splice(index, 1);
+    //$scope.alerts.splice(index, 1);
   };
 
   $scope.isLogin = function(path){
@@ -39,43 +40,12 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
     };
 
 });
-sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,$http,$timeout) {
+sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,mostrarNotificacion,callService) {
   $scope.lost = false;
   $scope.sendEmail = false;
   $scope.login = function(f){
-    var url = "services/login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
-    $http({method: 'GET', url: url})
-    .success(function(data, status, headers, config) {
-      if(data != "null"){
-        $scope.datos = data;
-        $scope.$parent.$parent.userName = $scope.datos.usu_nombre;
-        switch($scope.datos.usu_tipo_usuario_id) {
-          case "1":
-                $location.path("/Admin");
-              break;
-          case "2":
-                $location.path("/Docente");
-              break;
-          case "3":
-                $location.path("/Alumno");
-              break;
-          }
-      }
-      else{
-        $scope.$parent.$parent.alerts = [];
-        $scope.$parent.$parent.alerts.push({
-          msg: 'Usuario o contrase\u00f1a incorrectos',
-          type: 'error'
-        });
-        $timeout(function(){
-          $scope.$parent.$parent.alerts = [];
-        }, 5000);
-      }
-    })
-    .error(function(data, status, headers, config) {
-      
-    });
-    
+    var url = "login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
+    callService.getCall(url);
   };
 
 });
@@ -281,14 +251,14 @@ sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope,$timeo
       $scope.confirmPassword = '';
     }
     else{
-      $scope.$parent.$parent.alerts = [];
+      /*$scope.$parent.$parent.alerts = [];
       $scope.$parent.$parent.alerts.push({
         msg: 'Las contrase\u00f1as deben ser iguales',
         type: 'error'
       });
       $timeout(function(){
         $scope.$parent.$parent.alerts = [];
-      }, 5000);
+      }, 5000);*/
     }
   };
 

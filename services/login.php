@@ -7,6 +7,10 @@
 
 	$query = "SELECT * FROM usuario WHERE usu_usuario_num = $usu_name AND usu_contrasena = $usu_pass;";
 	$result = leerRegistro($query);
-	
-	print_r(json_encode($result));
+	if(isset($result)){
+		print_r(json_encode($result));
+	}
+	else{
+		print_r(666);
+	}
 ?>
