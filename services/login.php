@@ -11,6 +11,6 @@
 		print_r(json_encode($result));
 	}
 	else{
-		print_r(666);
+		print_r("error");
 	}
 ?>

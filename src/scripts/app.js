@@ -199,17 +199,32 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
 
   return serv;
   }
-]).service('callService', ['$http', function ($http) {
+]).service('callToWebService', [
+  '$http',
+  function ($http) {
+    this.postCall = function (endpoint, succesCB, errorCB) {
+        $http({
+            method:'GET',
+            url:'services/'+endpoint
+        })
+        .success(function (data){
+          if (data == "error") {
+            errorCB(data);
+          }
+          else{
+            succesCB(data);
+          }
+        })
+        .error(function (data){
+        });
+    };
 
-  this.getCall = function(nameService){
-    var url = 'services/'+nameService;
-    $http({method: 'GET', url: url})
-    .success(function(data) {
-      return data;
-    })
-    .error(function(data) {
-      return data;
-    });
-  };
-}
+}]).service('validaSesion', [
+    function(){
+        var result = false;
+        this.login = function () {
+           
+            return result;
+        };
+    }
 ]);   

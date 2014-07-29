@@ -1,14 +1,11 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
-sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal) {
-
-  //$scope.alerts = [];
-  $scope.userName = '';
+sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal,validaSesion,mostrarNotificacion) {
   debugger;
-
-  $scope.closeAlert = function(index) {
-    //$scope.alerts.splice(index, 1);
-  };
+  if(validaSesion.login()){
+    mostrarNotificacion.error("Sesion expirada");
+    $state.transitionTo('Login');
+  }
 
   $scope.isLogin = function(path){
     return $state.is(path);
@@ -40,12 +37,18 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
     };
 
 });
-sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,mostrarNotificacion,callService) {
+sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,mostrarNotificacion,callToWebService) {
   $scope.lost = false;
   $scope.sendEmail = false;
   $scope.login = function(f){
     var url = "login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
-    callService.getCall(url);
+    callToWebService.postCall(url,
+    function sucess(data){
+      debugger;
+    },
+    function error(data){
+     mostrarNotificacion.error("Usuario o contrasena incorrectos");
+    });
   };
 
 });
