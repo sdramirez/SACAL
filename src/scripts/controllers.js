@@ -1,7 +1,7 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal,validaSesion,mostrarNotificacion) {
-  debugger;
+  
   if(validaSesion.login()){
     mostrarNotificacion.error("Sesion expirada");
     $state.transitionTo('Login');
@@ -44,7 +44,7 @@ sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,m
     var url = "login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
     callToWebService.postCall(url,
     function sucess(data){
-      debugger;
+      
     },
     function error(data){
      mostrarNotificacion.error("Usuario o contrasena incorrectos");

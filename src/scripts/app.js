@@ -208,7 +208,7 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
             url:'services/'+endpoint
         })
         .success(function (data){
-          if (data == "error") {
+          if (data) {
             errorCB(data);
           }
           else{
