@@ -208,7 +208,7 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
             url:'services/'+endpoint
         })
         .success(function (data){
-          if (data) {
+          if (data == "error") {
             errorCB(data);
           }
           else{
@@ -229,9 +229,11 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
           })
           .success(function (data){
             if(data){
+              debugger;
               succesCB();
             }
             else{
+              debugger;
               $location.path("/Login");
             }
           })

@@ -1,10 +1,15 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal,validaSesion,mostrarNotificacion) {
-
   validaSesion.login(function sucess(){
+    callToWebService.postCall("getInfoToken.php",
+    function sucess(data){
+      $scope.json = data;
       debugger;
-
+    },
+    function error(data){
+      mostrarNotificacion.error("Usuario o contrasena incorrectos");
+    });
   });
 
   $scope.isLogin = function(path){
@@ -41,13 +46,12 @@ sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,m
   $scope.lost = false;
   $scope.sendEmail = false;
   $scope.login = function(f){
-    var url = "login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
+    var url = "login.php?usu_name='"+f.username.$viewValue+"'&usu_pass='"+f.password.$viewValue+"'";
     debugger;
     callToWebService.postCall(url,
     function sucess(data){
-      debugger;
       $scope.json = data;
-      
+      debugger;
     },
     function error(data){
      mostrarNotificacion.error("Usuario o contrasena incorrectos");
@@ -55,10 +59,16 @@ sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,m
   };
 
 });
-sacalControllers.controller("AlumnoCtrl", function($rootScope,$scope){
-  
+sacalControllers.controller("AlumnoCtrl", function ($rootScope,$scope,validaSesion){
+  validaSesion.login(function sucess(){
+    debugger;
+  });
 });
-sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location) { 
+sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location,validaSesion) {
+  validaSesion.login(function sucess(){
+    debugger;
+  });
+
   $location.path("/Docente/Reservar");
   $scope.menuActivo = function(path){
     return $state.is(path);
@@ -215,11 +225,14 @@ sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
     $scope.aire = bool;
   };
 });
-sacalControllers.controller("ReporteDocenteCtrl", function($rootScope,$scope){
+sacalControllers.controller("ReporteDocenteCtrl", function ($rootScope,$scope){
   
 });
-sacalControllers.controller("AdminCtrl", function($rootScope,$scope,$location,$state){
-  
+sacalControllers.controller("AdminCtrl", function ($rootScope,$scope,$location,$state,validaSesion){
+  validaSesion.login(function sucess(){
+    debugger;
+  });
+
   $location.path("/Admin/Alumno");
   $scope.menuActivo = function(path){
     return $state.is(path);
@@ -228,7 +241,7 @@ sacalControllers.controller("AdminCtrl", function($rootScope,$scope,$location,$s
     $location.path(url);
   };
 });
-sacalControllers.controller("AlumnoAdminCtrl", function($rootScope,$scope,$timeout){
+sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,$timeout){
   $scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A',confirmPassword:'123456'},
   {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A',confirmPassword:'jperez'}];
  
