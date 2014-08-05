@@ -1,11 +1,11 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
 sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal,validaSesion,mostrarNotificacion) {
-  
-  if(validaSesion.login()){
-    mostrarNotificacion.error("Sesion expirada");
-    $state.transitionTo('Login');
-  }
+
+  validaSesion.login(function sucess(){
+      debugger;
+
+  });
 
   $scope.isLogin = function(path){
     return $state.is(path);
@@ -42,8 +42,11 @@ sacalControllers.controller("LoginCtrl", function ($rootScope,$scope,$location,m
   $scope.sendEmail = false;
   $scope.login = function(f){
     var url = "login.php?usu_name="+f.username.$viewValue+"&usu_pass='"+f.password.$viewValue+"'";
+    debugger;
     callToWebService.postCall(url,
     function sucess(data){
+      debugger;
+      $scope.json = data;
       
     },
     function error(data){

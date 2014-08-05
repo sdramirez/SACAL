@@ -220,11 +220,24 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
     };
 
 }]).service('validaSesion', [
-    function(){
-        var result = false;
-        this.login = function () {
-           
-            return result;
+  '$http','$location',
+    function ($http,$location){
+        this.login = function (succesCB) {
+          $http({
+            method:'GET',
+            url:'services/validaSesion.php'
+          })
+          .success(function (data){
+            if(data){
+              succesCB();
+            }
+            else{
+              $location.path("/Login");
+            }
+          })
+          .error(function (data){
+            $location.path("/Login");
+          });
         };
-    }
-]);   
+      }
+]);

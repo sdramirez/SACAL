@@ -1,10 +1,9 @@
 <?php
 	error_reporting(0);
-	
-	if($_COOKIE["user"]){
-		print_r("correcto");
+	if (isset($_COOKIE['sacalWeb'])){
+    	echo true;
 	}
 	else{
-		print_r("error");
+	    echo false;
 	}
 ?>
