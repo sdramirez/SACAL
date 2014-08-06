@@ -5,7 +5,6 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
     $scope.Usuario = data;
     $scope.userName =  $scope.Usuario.usu_nombre;
     $scope.typeUser = $scope.Usuario.usu_tipo_usuario_id;
-      debugger;
       switch($scope.typeUser){
         case "1":
         $location.path("/Admin/Alumno");
@@ -23,8 +22,13 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
     return $state.is(path);
   };
   $scope.singOut = function(){
-    
-    $location.path("/Login");
+      callToWebService.postCall("cerrarSesion.php",
+      function sucess(data){
+        location.reload();
+      },
+      function error(data){
+        location.reload();
+      });
   };
   $scope.newPass = function(){
 
@@ -256,9 +260,21 @@ sacalControllers.controller("AdminCtrl", function ($rootScope,$scope,$location,$
     $location.path(url);
   };
 });
-sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,$timeout){
-  $scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A',confirmPassword:'123456'},
-  {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A',confirmPassword:'jperez'}];
+sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listAlumno.php",
+      function sucess(data){
+        $scope.alumnos = data;
+      },
+      function error(data){
+        mostrarNotificacion.error("");
+      });
+  }, true);
+
+  /*$scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A',confirmPassword:'123456'},
+  {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A',confirmPassword:'jperez'}];*/
  
   $scope.select = function(i){
     $scope.rowSelec = i;
@@ -285,14 +301,6 @@ sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,$time
       $scope.confirmPassword = '';
     }
     else{
-      /*$scope.$parent.$parent.alerts = [];
-      $scope.$parent.$parent.alerts.push({
-        msg: 'Las contrase\u00f1as deben ser iguales',
-        type: 'error'
-      });
-      $timeout(function(){
-        $scope.$parent.$parent.alerts = [];
-      }, 5000);*/
     }
   };
 
@@ -304,15 +312,16 @@ sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,$time
 
   $scope.editAlumno = function(){
     var alumno = $scope.alumnos[$scope.rowSelec];
-    $scope.matricula = alumno.matricula;
-    $scope.name = alumno.nombre;
-    $scope.password = alumno.password;
-    $scope.grupo = alumno.grupo;
-    $scope.confirmPassword = alumno.confirmPassword;
+    $scope.matricula = alumno.usu_correo;
+    $scope.name = alumno.usu_nombre;
+    $scope.password = alumno.usu_contrasena;
+    $scope.grupo = alumno.gru_nombre;
+    $scope.confirmPassword = alumno.usu_contrasena;
+    
     $scope.editar = true;
   };
-
 });
+
 sacalControllers.controller("MaestroAdminCtrl", function($rootScope,$scope,$timeout){
 
   $scope.empleados = [{noEmpleado:'AD41',nombre:'Jose Perez',password:'564',typeUser:'Docente',confirmPassword:'564', materia:'Web'},

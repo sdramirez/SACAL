@@ -6,7 +6,7 @@
     		<input type="text" name="name" placeholder="Nombre del alumno" ng-model="name" required>
     	</div>
       <div>
-        <input type="text" name="matricula" placeholder="Matricula del alumno" ng-model="matricula" required>
+        <input type="text" name="matricula" placeholder="Correo" ng-model="matricula" required>
       </div>
    	 	<div>
       		<input type="password" name="password" placeholder="Contrase&ntilde;a" ng-model="password" required>
@@ -37,16 +37,18 @@
       <tr>
         <th>Matricula</th>
         <th>Nombre</th>
+        <th>Correo</th>
         <th>Contrase&ntilde;a</th>
         <th>Grupo</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="alu in alumnos" ng-click="select($index)" ng-class="{'rowSelec':rowSelec == $index}">
-        <td>{{alu.matricula}}</td>
-        <td>{{alu.nombre}}</td>
-        <td>{{alu.password}}</td>
-        <td>{{alu.grupo}}</td>
+      <tr class="rowList" ng-repeat="alu in alumnos" ng-click="select($index)" ng-class="{'rowSelec':rowSelec == $index}">
+        <td>{{$index + 1 }}</td>
+        <td>{{alu.usu_nombre}}</td>
+        <td>{{alu.usu_correo}}</td>
+        <td>{{alu.usu_contrasena}}</td>
+        <td>{{alu.gru_nombre}}</td>
       </tr>
     </tbody>
   </table>
