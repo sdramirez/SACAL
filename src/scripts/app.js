@@ -229,11 +229,11 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
           })
           .success(function (data){
             if(data){
-              debugger;
+              
               succesCB();
             }
             else{
-              debugger;
+              
               $location.path("/Login");
             }
           })

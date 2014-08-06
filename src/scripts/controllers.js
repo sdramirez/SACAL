@@ -1,6 +1,6 @@
 var sacalControllers = angular.module('sacalControllers', []);
 
-sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal,validaSesion,mostrarNotificacion) {
+sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$location,$modal,validaSesion,mostrarNotificacion,callToWebService) {
   validaSesion.login(function sucess(){
     callToWebService.postCall("getInfoToken.php",
     function sucess(data){
@@ -8,7 +8,8 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
       debugger;
     },
     function error(data){
-      mostrarNotificacion.error("Usuario o contrasena incorrectos");
+      debugger;
+      mostrarNotificacion.error("Sesion expirada");
     });
   });
 
