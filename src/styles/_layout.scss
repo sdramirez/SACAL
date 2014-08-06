@@ -38,7 +38,18 @@ body {
     
     /* ------ CSS PARA MASTER PAGE ----- */
     margin: 20px auto;
-    background-color: #028FBE;
+    background-image: -webkit-gradient(
+        linear,
+        right top,
+        left top,
+        color-stop(0.35, #007599),
+        color-stop(0.75, #0492C2)
+    );
+    background-image: -o-linear-gradient(left, #007599 35%, #0492C2 75%);
+    background-image: -moz-linear-gradient(left, #007599 35%, #0492C2 75%);
+    background-image: -webkit-linear-gradient(left, #007599 35%, #0492C2 75%);
+    background-image: -ms-linear-gradient(left, #007599 35%, #0492C2 75%);
+    background-image: linear-gradient(to left, #007599 35%, #0492C2 75%);
     color: white;
     .footerApp, .headerApp{padding:0;}
     .headerApp{ 

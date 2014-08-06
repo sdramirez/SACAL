@@ -228,12 +228,10 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
             url:'services/validaSesion.php'
           })
           .success(function (data){
-            if(data){
-              
-              succesCB();
+            if(data != "error"){
+              succesCB(data);
             }
-            else{
-              
+            else{              
               $location.path("/Login");
             }
           })
