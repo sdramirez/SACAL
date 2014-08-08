@@ -29,6 +29,13 @@
     function ejecutarConsulta($consulta)
     {
         conectar();
-        mysql_query($consulta) or die ("Error");
+        mysql_query($consulta) or die ("error");
+    }
+
+    function ejecutarConsultaId($consulta)
+    {
+        conectar();
+        mysql_query($consulta);
+        return mysql_insert_id();
     }
 ?>

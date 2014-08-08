@@ -10,10 +10,8 @@
 			unset($_COOKIE['sacalWeb']);
 			setcookie('sacalWeb', null);
 		}
-		else{
-			$datos = substr(md5(md5($usu_name.$usu_pass)), -20);   
-			setcookie('sacalWeb', $datos, time() + 3600);
-		}
+		$datos = substr(md5(md5($usu_name.$usu_pass)), -20);   
+		setcookie('sacalWeb', $datos, time() + 3600);
 		print_r(json_encode($result));
 	}
 	else{

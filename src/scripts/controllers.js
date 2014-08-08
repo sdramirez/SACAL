@@ -15,6 +15,9 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
         case "3":
         $location.path("/Alumno");
         break;
+        case "4":
+        $location.path("/Admin/Alumno");
+        break;
       }
   });
 
@@ -75,7 +78,7 @@ sacalControllers.controller("AlumnoCtrl", function ($rootScope,$scope,validaSesi
     $scope.typeUser = $scope.Usuario.usu_tipo_usuario_id;
     if($scope.typeUser != 3){
       location.reload();
-    }  
+    }
   });
 });
 sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$location,validaSesion) {
@@ -84,7 +87,7 @@ sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$l
     $scope.typeUser = $scope.Usuario.usu_tipo_usuario_id;
     if($scope.typeUser != 2){
       location.reload();
-    }  
+    }
   });
 
   $scope.menuActivo = function(path){
@@ -249,9 +252,9 @@ sacalControllers.controller("AdminCtrl", function ($rootScope,$scope,$location,$
   validaSesion.login(function sucess(data){
     $scope.Usuario = data;
     $scope.typeUser = $scope.Usuario.usu_tipo_usuario_id;
-    if($scope.typeUser != 1){
+    if($scope.typeUser != 1 && $scope.typeUser != 4){
       location.reload();
-    }    
+    }
   });
   $scope.menuActivo = function(path){
     return $state.is(path);
@@ -260,79 +263,251 @@ sacalControllers.controller("AdminCtrl", function ($rootScope,$scope,$location,$
     $location.path(url);
   };
 });
+
 sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
   
   $scope.llamadoInicial = 1;
   $scope.$watch("llamadoInicial", function (params, paramsOld) {
     callToWebService.postCall("listAlumno.php",
       function sucess(data){
-        $scope.alumnos = data;
+        $scope.alumnos = data.Alumnos;
+        $scope.grupos = data.Grupos;
       },
       function error(data){
-        mostrarNotificacion.error("");
+        mostrarNotificacion.error("Error al cargar datos");
       });
   }, true);
 
-  /*$scope.alumnos = [{matricula:'0311101129',nombre:'Juan Perez',password:'123456',grupo:'1-A',confirmPassword:'123456'},
-  {matricula:'0311101145',nombre:'Jose Lopez',password:'jperez',grupo:'1-A',confirmPassword:'jperez'}];*/
+  $scope.$watch("grupo", function (params, paramsOld) {
+    if(params != paramsOld){
+      for(var i in $scope.grupos){
+        if(params == $scope.grupos[i].gru_id)
+          $scope.grupoNombre = $scope.grupos[i].gru_nombre;
+      }
+    }
+  }, true);
  
   $scope.select = function(i){
     $scope.rowSelec = i;
     $scope.opciones = true;
   };
-
   $scope.addAlumno = function(form){
-    if(form.password.$viewValue == form.confirmPassword.$viewValue){  
-      if($scope.editar){
-        $scope.deleteAlumno();
-      }
-      $scope.alumnos.push({
-        matricula: form.matricula.$viewValue,
-        nombre: form.name.$viewValue,
-        password: form.password.$viewValue,
-        grupo: form.grupo.$viewValue,
-        confirmPassword: form.confirmPassword.$viewValue
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){
+      var correo = form.correo.$viewValue;
+      var pass = form.password.$viewValue;
+      var nombre = form.name.$viewValue;
+      var matri = form.matricula.$viewValue;
+      var grupoId = form.grupo.$viewValue;
+      var url = "insertUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=3&grupo="+grupoId;
+      callToWebService.postCall(url,
+      function sucess(data){
+        $scope.alumnos.push({
+          usu_nombre:nombre,
+          usu_usuario_num:matri,
+          usu_contrasena:pass,
+          usu_correo:correo,
+          gru_nombre:$scope.grupoNombre
+        });
+        $scope.matricula = '';
+        $scope.name = '';
+        $scope.password = '';
+        $scope.correo = '';
+        $scope.grupo = '';
+        $scope.confirmPassword = '';
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al crear alumno");
       });
-      
-      $scope.matricula = '';
-      $scope.name = '';
-      $scope.password = '';
-      $scope.grupo = '';
-      $scope.confirmPassword = '';
     }
     else{
+      mostrarNotificacion.error("Las contrasenas no coinciden");
+    }
+  };
+
+  $scope.editAlumnoSave = function(form){
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){
+      var correo = form.correo.$viewValue;
+      var pass = form.password.$viewValue;
+      var nombre = form.name.$viewValue;
+      var matri = form.matricula.$viewValue;
+      var grupoId = form.grupo.$viewValue;
+      var alumno = $scope.alumnos[$scope.editSelect];
+      var url = "updateUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=3&grupo="+grupoId+"&alumno="+alumno.alu_id+"&usuario="+alumno.usu_id;
+      callToWebService.postCall(url,
+      function sucess(data){
+        var newAlumno = {
+          usu_nombre:nombre,
+          usu_usuario_num:matri,
+          usu_contrasena:pass,
+          usu_correo:correo,
+          gru_nombre:$scope.grupoNombre
+        };
+        $scope.alumnos[$scope.editSelect] = newAlumno;
+        $scope.matricula = '';
+        $scope.name = '';
+        $scope.password = '';
+        $scope.correo = '';
+        $scope.grupo = '';
+        $scope.confirmPassword = '';
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al actualizar alumno");
+      });
+    }
+    else{
+      mostrarNotificacion.error("Las contrasenas no coinciden");
     }
   };
 
   $scope.deleteAlumno = function(){
-      $scope.alumnos.splice($scope.rowSelec,1);
-      $scope.rowSelec = -1;
-      $scope.opciones = false;
+      var alumno = $scope.alumnos[$scope.rowSelec];
+      var url = "deleteUsers.php?alumno="+alumno.alu_id+"&usuario="+alumno.usu_id+"&type=3";
+      callToWebService.postCall(url,
+      function sucess(data){
+        $scope.alumnos.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar alumno");
+      });
   };
 
   $scope.editAlumno = function(){
     var alumno = $scope.alumnos[$scope.rowSelec];
-    $scope.matricula = alumno.usu_correo;
+    $scope.editSelect = $scope.rowSelec;
     $scope.name = alumno.usu_nombre;
+    $scope.matricula = alumno.usu_usuario_num;
+    $scope.correo = alumno.usu_correo;
     $scope.password = alumno.usu_contrasena;
-    $scope.grupo = alumno.gru_nombre;
     $scope.confirmPassword = alumno.usu_contrasena;
-    
+    $scope.grupo = alumno.gru_id;
     $scope.editar = true;
   };
 });
 
-sacalControllers.controller("MaestroAdminCtrl", function($rootScope,$scope,$timeout){
+sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listEmpleado.php",
+      function sucess(data){
+        $scope.maestros = data.Maestros;
+        $scope.materias = data.Materias;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
 
-  $scope.empleados = [{noEmpleado:'AD41',nombre:'Jose Perez',password:'564',typeUser:'Docente',confirmPassword:'564', materia:'Web'},
-  {noEmpleado:'CV85',nombre:'Predro Mendez',password:'pm',typeUser:'Admin',confirmPassword:'pm', materia:''}];
+  $scope.$watch("materia", function (params, paramsOld) {
+    if(params != paramsOld){
+      for(var i in $scope.materias){
+        if(params == $scope.materias[i].mat_id)
+          $scope.materiaNombre = $scope.materias[i].mat_nombre;
+      }
+    }
+  }, true);
  
   $scope.select = function(i){
     $scope.rowSelec = i;
     $scope.opciones = true;
   };
 
+  $scope.addMaestro = function(form){
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){
+      var correo = form.correo.$viewValue;
+      var pass = form.password.$viewValue;
+      var nombre = form.name.$viewValue;
+      var matri = form.matricula.$viewValue;
+      var materiaId = form.materia.$viewValue;
+      var url = "insertUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=2&grupo="+materiaId;
+      callToWebService.postCall(url,
+      function sucess(data){
+        $scope.maestros.push({
+          usu_nombre:nombre,
+          usu_usuario_num:matri,
+          usu_contrasena:pass,
+          usu_correo:correo,
+          mat_nombre:$scope.materiaNombre
+        });
+        $scope.matricula = '';
+        $scope.name = '';
+        $scope.password = '';
+        $scope.correo = '';
+        $scope.materia = '';
+        $scope.confirmPassword = '';
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al crear maestro");
+      });
+    }
+    else{
+      mostrarNotificacion.error("Las contrasenas no coinciden");
+    }
+  };
+
+  $scope.editMaestroSave = function(form){
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){
+      var correo = form.correo.$viewValue;
+      var pass = form.password.$viewValue;
+      var nombre = form.name.$viewValue;
+      var matri = form.matricula.$viewValue;
+      var grupoId = form.materia.$viewValue;
+      var alumno = $scope.maestros[$scope.editSelect];
+      var url = "updateUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=2&grupo="+grupoId+"&alumno="+alumno.mae_mat_id+"&usuario="+alumno.usu_id;
+      callToWebService.postCall(url,
+      function sucess(data){
+        var newAlumno = {
+          usu_nombre:nombre,
+          usu_usuario_num:matri,
+          usu_contrasena:pass,
+          usu_correo:correo,
+          mat_nombre:$scope.materiaNombre
+        };
+        $scope.maestros[$scope.editSelect] = newAlumno;
+        $scope.matricula = '';
+        $scope.name = '';
+        $scope.password = '';
+        $scope.correo = '';
+        $scope.materia = '';
+        $scope.confirmPassword = '';
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al actualizar alumno");
+      });
+    }
+    else{
+      mostrarNotificacion.error("Las contrasenas no coinciden");
+    }
+  };
+
+  $scope.deleteMaestro = function(){
+      var alumno = $scope.maestros[$scope.rowSelec];
+      var url = "deleteUsers.php?alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2";
+      callToWebService.postCall(url,
+      function sucess(data){
+        $scope.maestros.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar alumno");
+      });
+  };
+
+  $scope.editMaestro = function(){
+    var alumno = $scope.maestros[$scope.rowSelec];
+    $scope.editSelect = $scope.rowSelec;
+    $scope.name = alumno.usu_nombre;
+    $scope.matricula = alumno.usu_usuario_num;
+    $scope.correo = alumno.usu_correo;
+    $scope.password = alumno.usu_contrasena;
+    $scope.confirmPassword = alumno.usu_contrasena;
+    $scope.materia = alumno.mat_id;
+    $scope.editar = true;
+  };
 });
+
 sacalControllers.controller("MateriaAdminCtrl", function($rootScope,$scope){
   $scope.materia = [{nombre:'Web',maestro:'Luis Lopez'},{nombre:'Android',maestro:'Daniel Jose'}];
  

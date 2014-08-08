@@ -31,9 +31,9 @@
           </ul>
         </div>
       </div>
-       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 alerts">
-        <div ng-repeat="alert in alerts" class="{{alert.type}}">{{alert.msg}} <span class="pull-right glyphicon glyphicon-remove" ng-click="closeAlert($index)"></span></div>
-      </div>
+       <div ng-controller="alertCtrl" class="col-xs-12 col-sm-10 col-md-8 col-lg-6 col-sm-offset-1 col-md-offset-2 col-lg-offset-3">
+          <alert ng-repeat="alert in notificaciones.alerts" type="alert.type" class="{{alert.type}}" close="notificaciones.clear()" ng-cloak>{{alert.msg}}</alert>
+        </div>
     </div>
   </div>
   <div class="row">

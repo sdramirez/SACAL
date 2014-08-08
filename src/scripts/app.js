@@ -136,8 +136,8 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
           }
       }
   })
-  .state('admin.hora', {
-      url: '/Hora',
+  .state('admin.admins', {
+      url: '/Admins',
       views:
       {
           '@':{

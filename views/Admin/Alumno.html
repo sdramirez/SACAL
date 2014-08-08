@@ -1,12 +1,15 @@
-<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 formulario">
+<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 formulario">
 	<form name="formAlumno" novalidate>
-    	<legend ng-hide="editar">Registrar alumno</legend>
-      <legend ng-show="editar">Editar alumno</legend>
+    	<legend ng-hide="editar">Registrar Alumno</legend>
+      <legend ng-show="editar">Editar Alumno</legend>
     	<div>
-    		<input type="text" name="name" placeholder="Nombre del alumno" ng-model="name" required>
+        <input type="text" name="name" placeholder="Nombre del alumno" ng-model="name" required>
+      </div>
+      <div>
+    		<input type="text" name="matricula" placeholder="Matricula del alumno" ng-model="matricula" required>
     	</div>
       <div>
-        <input type="text" name="matricula" placeholder="Correo" ng-model="matricula" required>
+        <input type="text" name="correo" placeholder="Correo del alumno" ng-model="correo" ng-pattern="/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/" required>
       </div>
    	 	<div>
       		<input type="password" name="password" placeholder="Contrase&ntilde;a" ng-model="password" required>
@@ -15,26 +18,23 @@
           <input type="password" name="confirmPassword" placeholder="Confirmar contrase&ntilde;a" ng-model="confirmPassword" required>
       </div>
       <div>
-        <select name="grupo" ng-model="grupo" required>
+        <select name="grupo" ng-model="grupo" ng-options="gru.gru_id as gru.gru_nombre for gru in grupos" required>
           <option value="">Seleccione un grupo</option>
-          <option value="1-A">1-A</option>
-          <option value="3-A">3-A</option>
-          <option value="5-A">5-A</option>
-          <option value="1-B">1-B</option>
-          <option value="3-B">3-B</option>
-          <option value="5-B">5-B</option>
         </select>
       </div>
     	<div class="text-right">
+          <button type="button" ng-show="opciones" class="btn btn-danger" ng-click="deleteAlumno()">Eliminar</button>
+          <button type="button" ng-show="opciones" class="btn btn-success" ng-click="editAlumno()">Editar</button>
       		<button ng-hide="editar" class="btn btn-success" ng-click="addAlumno(formAlumno)" ng-disabled="formAlumno.$invalid">Guardar</button>
-          <button ng-show="editar" class="btn btn-success" ng-click="addAlumno(formAlumno)" ng-disabled="formAlumno.$invalid">Editar</button>
+          <button ng-show="editar" class="btn btn-success" ng-click="editAlumnoSave(formAlumno)" ng-disabled="formAlumno.$invalid">Guardar</button>
     	</div>
   </form>
 </div>
-<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 listados">
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 listados">
   <table class="table">
     <thead>
       <tr>
+        <th>No.</th>
         <th>Matricula</th>
         <th>Nombre</th>
         <th>Correo</th>
@@ -45,6 +45,7 @@
     <tbody>
       <tr class="rowList" ng-repeat="alu in alumnos" ng-click="select($index)" ng-class="{'rowSelec':rowSelec == $index}">
         <td>{{$index + 1 }}</td>
+        <td>{{alu.usu_usuario_num}}</td>
         <td>{{alu.usu_nombre}}</td>
         <td>{{alu.usu_correo}}</td>
         <td>{{alu.usu_contrasena}}</td>
@@ -52,8 +53,4 @@
       </tr>
     </tbody>
   </table>
-  <div ng-show="opciones">
-    <button type="button" class="btn btn-danger" ng-click="deleteAlumno()">Eliminar</button>
-    <button type="button" class="btn btn-success" ng-click="editAlumno()">Editar</button>
-  </div>
 </div>
