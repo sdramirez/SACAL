@@ -651,17 +651,6 @@ sacalControllers.controller("HoraAdminCtrl", function ($rootScope,$scope,mostrar
   };
 });
 
-sacalControllers.controller("GrupoAdminCtrl", function($rootScope,$scope){
-  $scope.grupo = [{nombre:'1-A',inicio:'2014-01-06',fin:'2014-04-25'},
-  {nombre:'3-A',inicio:'2014-01-06',fin:'2014-04-25'}];
- 
-  $scope.select = function(i){
-    $scope.rowSelec = i;
-    $scope.opciones = true;
-  };
-
-});
-
 sacalControllers.controller("LaboratorioAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
   $scope.llamadoInicial = 1;
   $scope.$watch("llamadoInicial", function (params, paramsOld) {
@@ -726,6 +715,79 @@ sacalControllers.controller("LaboratorioAdminCtrl", function ($rootScope,$scope,
     $scope.editSelect = $scope.rowSelec;
     $scope.name = alumno.lab_nombre;
     $scope.numero = parseInt(alumno.lab_num);
+    $scope.editar = true;
+  };
+});
+
+sacalControllers.controller("GrupoAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listGrupos.php",
+      function sucess(data){
+        $scope.grupos = data;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+
+  $scope.addMaestro = function(form){
+    var nombre = form.name.$viewValue;
+    var inicio = document.getElementById("fechaIni").value;
+    var fin = document.getElementById("fechaFin").value;
+    callToWebService.postCall("insertGrupo.php?nombre="+nombre+"&ini="+inicio+"&fin="+fin,
+    function sucess(data){
+      $scope.name = '';
+      document.getElementById("fechaIni").value = '';
+      document.getElementById("fechaFin").value = '';
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al crear grupo");
+    });
+  };
+
+  $scope.editMaestroSave = function(form){
+    var nombre = form.name.$viewValue;
+    var inicio = document.getElementById("fechaIni").value;
+    var fin = document.getElementById("fechaFin").value;
+    var id = $scope.grupos[$scope.editSelect].gru_id;
+    callToWebService.postCall("updateGrupo.php?id="+id+"&nombre="+nombre+"&ini="+inicio+"&fin="+fin,
+    function sucess(data){
+      $scope.name = '';
+      document.getElementById("fechaIni").value = '';
+      document.getElementById("fechaFin").value = '';
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al actualizar grupo");
+    });
+  };
+
+  $scope.deleteMaestro = function(){
+      var id = $scope.grupos[$scope.rowSelec].gru_id;
+      callToWebService.postCall("deleteGrupo.php?id="+id,
+      function sucess(data){
+        $scope.grupos.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar grupo");
+      });
+  };
+
+  $scope.editMaestro = function(){
+    var grupo = $scope.grupos[$scope.rowSelec];
+    $scope.editSelect = $scope.rowSelec;
+    $scope.name = grupo.gru_nombre;
+    $scope.fechaIni = grupo.gru_periodo_inicio;
+    $scope.fechaFin = grupo.gru_periodo_fin;
     $scope.editar = true;
   };
 });
