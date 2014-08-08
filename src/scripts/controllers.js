@@ -248,6 +248,7 @@ sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
 sacalControllers.controller("ReporteDocenteCtrl", function ($rootScope,$scope){
   
 });
+
 sacalControllers.controller("AdminCtrl", function ($rootScope,$scope,$location,$state,validaSesion){
   validaSesion.login(function sucess(data){
     $scope.Usuario = data;
@@ -301,19 +302,13 @@ sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,mostr
       var url = "insertUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=3&grupo="+grupoId;
       callToWebService.postCall(url,
       function sucess(data){
-        $scope.alumnos.push({
-          usu_nombre:nombre,
-          usu_usuario_num:matri,
-          usu_contrasena:pass,
-          usu_correo:correo,
-          gru_nombre:$scope.grupoNombre
-        });
         $scope.matricula = '';
         $scope.name = '';
         $scope.password = '';
         $scope.correo = '';
         $scope.grupo = '';
         $scope.confirmPassword = '';
+        $scope.llamadoInicial++;
       },
       function error(data){
         mostrarNotificacion.error("Error al crear alumno");
@@ -335,20 +330,13 @@ sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,mostr
       var url = "updateUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=3&grupo="+grupoId+"&alumno="+alumno.alu_id+"&usuario="+alumno.usu_id;
       callToWebService.postCall(url,
       function sucess(data){
-        var newAlumno = {
-          usu_nombre:nombre,
-          usu_usuario_num:matri,
-          usu_contrasena:pass,
-          usu_correo:correo,
-          gru_nombre:$scope.grupoNombre
-        };
-        $scope.alumnos[$scope.editSelect] = newAlumno;
         $scope.matricula = '';
         $scope.name = '';
         $scope.password = '';
         $scope.correo = '';
         $scope.grupo = '';
         $scope.confirmPassword = '';
+        $scope.llamadoInicial++;
       },
       function error(data){
         mostrarNotificacion.error("Error al actualizar alumno");
@@ -423,19 +411,13 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
       var url = "insertUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=2&grupo="+materiaId;
       callToWebService.postCall(url,
       function sucess(data){
-        $scope.maestros.push({
-          usu_nombre:nombre,
-          usu_usuario_num:matri,
-          usu_contrasena:pass,
-          usu_correo:correo,
-          mat_nombre:$scope.materiaNombre
-        });
         $scope.matricula = '';
         $scope.name = '';
         $scope.password = '';
         $scope.correo = '';
         $scope.materia = '';
         $scope.confirmPassword = '';
+        $scope.llamadoInicial++;
       },
       function error(data){
         mostrarNotificacion.error("Error al crear maestro");
@@ -457,23 +439,16 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
       var url = "updateUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=2&grupo="+grupoId+"&alumno="+alumno.mae_mat_id+"&usuario="+alumno.usu_id;
       callToWebService.postCall(url,
       function sucess(data){
-        var newAlumno = {
-          usu_nombre:nombre,
-          usu_usuario_num:matri,
-          usu_contrasena:pass,
-          usu_correo:correo,
-          mat_nombre:$scope.materiaNombre
-        };
-        $scope.maestros[$scope.editSelect] = newAlumno;
         $scope.matricula = '';
         $scope.name = '';
         $scope.password = '';
         $scope.correo = '';
         $scope.materia = '';
         $scope.confirmPassword = '';
+        $scope.llamadoInicial++;
       },
       function error(data){
-        mostrarNotificacion.error("Error al actualizar alumno");
+        mostrarNotificacion.error("Error al actualizar maestro");
       });
     }
     else{
@@ -483,7 +458,7 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
 
   $scope.deleteMaestro = function(){
       var alumno = $scope.maestros[$scope.rowSelec];
-      var url = "deleteUsers.php?alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2";
+      var url = "deleteUsers.php?idmaemat="+alumno.mae_mat_id+"&alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2";
       callToWebService.postCall(url,
       function sucess(data){
         $scope.maestros.splice($scope.rowSelec,1);
@@ -491,7 +466,7 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar alumno");
+        mostrarNotificacion.error("Error al elimniar maestro");
       });
   };
 
@@ -508,14 +483,174 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
   };
 });
 
-sacalControllers.controller("MateriaAdminCtrl", function($rootScope,$scope){
-  $scope.materia = [{nombre:'Web',maestro:'Luis Lopez'},{nombre:'Android',maestro:'Daniel Jose'}];
+sacalControllers.controller("MateriaAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listEmpleado.php",
+      function sucess(data){
+        $scope.materias = data.Materias;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
  
   $scope.select = function(i){
     $scope.rowSelec = i;
     $scope.opciones = true;
   };
+
+  $scope.addMaestro = function(form){
+    var nombre = form.name.$viewValue;
+    callToWebService.postCall("insertMateria.php?nombre="+nombre,
+    function sucess(data){
+      $scope.name = '';
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al crear materia");
+    });
+  };
+
+  $scope.editMaestroSave = function(form){
+    var nombre = form.name.$viewValue;
+    var matId = $scope.materias[$scope.editSelect].mat_id;
+    callToWebService.postCall("updateMateria.php?id="+matId+"&nombre="+nombre,
+    function sucess(data){
+      $scope.name = '';
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al actualizar materia");
+    });
+  };
+
+  $scope.deleteMaestro = function(){
+      var matId = $scope.materias[$scope.rowSelec].mat_id;
+      callToWebService.postCall("deleteMateria.php?id="+matId,
+      function sucess(data){
+        $scope.materias.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar materia");
+      });
+  };
+
+  $scope.editMaestro = function(){
+    var alumno = $scope.materias[$scope.rowSelec];
+    $scope.editSelect = $scope.rowSelec;
+    $scope.name = alumno.mat_nombre;
+    $scope.editar = true;
+  };
 });
+
+sacalControllers.controller("HoraAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listAdmins.php",
+      function sucess(data){
+        $scope.maestros = data;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+
+  $scope.addMaestro = function(form){
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){
+      var correo = form.correo.$viewValue;
+      var pass = form.password.$viewValue;
+      var nombre = form.name.$viewValue;
+      var matri = form.matricula.$viewValue;
+      var url = "insertUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=1";
+      callToWebService.postCall(url,
+      function sucess(data){
+        $scope.maestros.push({
+          usu_nombre:nombre,
+          usu_usuario_num:matri,
+          usu_contrasena:pass,
+          usu_correo:correo
+        });
+        $scope.matricula = '';
+        $scope.name = '';
+        $scope.password = '';
+        $scope.correo = '';
+        $scope.confirmPassword = '';
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al crear administrador");
+      });
+    }
+    else{
+      mostrarNotificacion.error("Las contrasenas no coinciden");
+    }
+  };
+
+  $scope.editMaestroSave = function(form){
+    if(form.password.$viewValue == form.confirmPassword.$viewValue){
+      var correo = form.correo.$viewValue;
+      var pass = form.password.$viewValue;
+      var nombre = form.name.$viewValue;
+      var matri = form.matricula.$viewValue;
+      var alumno = $scope.maestros[$scope.editSelect];
+      var url = "updateUsers.php?nombre="+nombre+"&matri="+matri+"&contra="+pass+"&correo="+correo+"&user=1&usuario="+alumno.usu_id;
+      callToWebService.postCall(url,
+      function sucess(data){
+        var newAlumno = {
+          usu_nombre:nombre,
+          usu_usuario_num:matri,
+          usu_contrasena:pass,
+          usu_correo:correo
+        };
+        $scope.maestros[$scope.editSelect] = newAlumno;
+        $scope.matricula = '';
+        $scope.name = '';
+        $scope.password = '';
+        $scope.correo = '';
+        $scope.confirmPassword = '';
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al actualizar administrador");
+      });
+    }
+    else{
+      mostrarNotificacion.error("Las contrasenas no coinciden");
+    }
+  };
+
+  $scope.deleteMaestro = function(){
+      var alumno = $scope.maestros[$scope.rowSelec];
+      var url = "deleteUsers.php?usuario="+alumno.usu_id;
+      callToWebService.postCall(url,
+      function sucess(data){
+        $scope.maestros.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar administrador");
+      });
+  };
+
+  $scope.editMaestro = function(){
+    var alumno = $scope.maestros[$scope.rowSelec];
+    $scope.editSelect = $scope.rowSelec;
+    $scope.name = alumno.usu_nombre;
+    $scope.matricula = alumno.usu_usuario_num;
+    $scope.correo = alumno.usu_correo;
+    $scope.password = alumno.usu_contrasena;
+    $scope.confirmPassword = alumno.usu_contrasena;
+    $scope.editar = true;
+  };
+});
+
 sacalControllers.controller("GrupoAdminCtrl", function($rootScope,$scope){
   $scope.grupo = [{nombre:'1-A',inicio:'2014-01-06',fin:'2014-04-25'},
   {nombre:'3-A',inicio:'2014-01-06',fin:'2014-04-25'}];
@@ -526,33 +661,79 @@ sacalControllers.controller("GrupoAdminCtrl", function($rootScope,$scope){
   };
 
 });
-sacalControllers.controller("LaboratorioAdminCtrl", function($rootScope,$scope){
-  $scope.labs = [{nombre:'Multimedia',noCompu:20},
-  {nombre:'Desarrollo I',noCompu:22}];
+
+sacalControllers.controller("LaboratorioAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listLab.php",
+      function sucess(data){
+        $scope.labs = data;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
  
   $scope.select = function(i){
     $scope.rowSelec = i;
     $scope.opciones = true;
   };
-});
-sacalControllers.controller("ReservarAdminCtrl", function($rootScope,$scope){
-  
-});
-sacalControllers.controller("HoraAdminCtrl", function($rootScope,$scope){
-  $scope.hora=[{inicio:'7:00', fin:'7:50'},{inicio:'7:50',fin:'8:40'},
-  {inicio:'8:40',fin:'9:30'},{inicio:'9:30',fin:'10:20'}];
-  $scope.dia=[{Dia:"Lunes"},{Dia:"Martes"},{Dia:"Miercoles"},{Dia:"Jueves"},
-  {Dia:"Viernes"}];
-  $scope.select = function(i){
-    $scope.rowSelec = i;
-    $scope.opciones = true;
-  };
-   $scope.select2 = function(i){
-    $scope.rowSelec2 = i;
-    $scope.opciones2 = true;
+
+  $scope.addMaestro = function(form){
+    var nombre = form.name.$viewValue;
+    var numero = form.numero.$viewValue;
+    callToWebService.postCall("insertLab.php?nombre="+nombre+"&num="+numero,
+    function sucess(data){
+      $scope.name = '';
+      $scope.numero = '';
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al crear laboratorio");
+    });
   };
 
+  $scope.editMaestroSave = function(form){
+    var nombre = form.name.$viewValue;
+    var numero = form.numero.$viewValue;
+    var labId = $scope.labs[$scope.editSelect].lab_id;
+    callToWebService.postCall("updateLab.php?id="+labId+"&nombre="+nombre+"&num="+numero,
+    function sucess(data){
+      $scope.name = '';
+      $scope.numero = '';
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al actualizar laboratorio");
+    });
+  };
+
+  $scope.deleteMaestro = function(){
+      var labId = $scope.labs[$scope.rowSelec].lab_id;
+      callToWebService.postCall("deleteLab.php?id="+labId,
+      function sucess(data){
+        $scope.labs.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar materia");
+      });
+  };
+
+  $scope.editMaestro = function(){
+    var alumno = $scope.labs[$scope.rowSelec];
+    $scope.editSelect = $scope.rowSelec;
+    $scope.name = alumno.lab_nombre;
+    $scope.numero = parseInt(alumno.lab_num);
+    $scope.editar = true;
+  };
 });
+
+sacalControllers.controller("ReservarAdminCtrl", function ($rootScope,$scope){
+  
+});
+
 sacalControllers.controller("ControlAdminCtrl", function($rootScope,$scope){
   
 });

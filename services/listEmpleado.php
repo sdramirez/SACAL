@@ -7,7 +7,7 @@
 	while ($r=mysql_fetch_assoc($result)){
 		$output[] = $r;
 	}
-	$query = "SELECT * FROM materia";
+	$query = "SELECT * FROM materia ORDER BY mat_nombre";
 	$result = leerTabla($query);
 	$output2 = array();
 	while ($r=mysql_fetch_assoc($result)){
