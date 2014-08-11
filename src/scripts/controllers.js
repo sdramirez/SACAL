@@ -4,6 +4,7 @@ sacalControllers.controller("MainCtrl", function ($rootScope,$scope,$state,$loca
   validaSesion.login(function sucess(data){
     $scope.Usuario = data;
     $scope.userName =  $scope.Usuario.usu_nombre;
+    $scope.userId =  $scope.Usuario.usu_id;
     $scope.typeUser = $scope.Usuario.usu_tipo_usuario_id;
       switch($scope.typeUser){
         case "1":
@@ -97,10 +98,8 @@ sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$l
     $location.path(url);
   };
 });
-sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$modal) {
-  $scope.labDisponibles = [{Nombre:'Todos'},{Nombre:'Laboratorio I'},{Nombre:'Lab II'},
-  {Nombre:'Diseño'},{Nombre:'Desarrollo'}];
-  $scope.opcSelect = 'Laboratorio I';
+sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService,$modal) {
+  
   $scope.dias=[{Dia:"Lunes"},{Dia:"Martes"},{Dia:"Miercoles"},{Dia:"Jueves"},
   {Dia:"Viernes"}];
   $scope.horas=[{Hor:'7:00  7:50'},{Hor:'7:50  8:40'},{Hor:'8:40  9:30'},
@@ -110,44 +109,76 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,$
   {Hor:'17:00  17:50'},{Hor:'17:50  18:40'},{Hor:'18:40  19:30'},
   {Hor:'19:30  20:20'},{Hor:'20:20  21:10'},{Hor:'21:10  22:00'},
   {Hor:'22:00 22:50'}];
-  $scope.dataHoras = [{Horas:2,
+
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listLab.php",
+      function sucess(data){
+        $scope.labs = data;
+        $scope.lab = $scope.labs[1].lab_id;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
+
+  $scope.$watch("lab", function (params, paramsOld) {
+    if(params != paramsOld){
+      for(var i in $scope.labs){
+        if(params == $scope.labs[i].lab_id)
+          $scope.labNombre = $scope.labs[i].lab_nombre;
+      }
+      callToWebService.postCall("listReservacion.php?id=params&usu="+$scope.$parent.$parent.userId,
+      function sucess(data){
+        $scope.clases = data.Clases;
+        $scope.reservacion = data.Reservacion;
+        debugger;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+    }
+  }, true);
+
+  
+  $scope.dataHoras = [{
     Dias:[{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'}]},
-  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},
+  {Dias:[{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'}]},
-  {Horas:2,Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
     {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
-  {Horas:2,Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
   {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
   {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
-  {Horas:2,Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
+  {Dias:[{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
   {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
   {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
-  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},
+  {Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},
   {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},
   {esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''},{esReservado:false,esReservadoOwner:false,Nombre:'',Materia:'',Grupo:''}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'}]},
-  {Horas:2,Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
-  {Horas:2,Dias:[{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:true,esReservadoOwner:false,Nombre:'Juan Perez',Materia:'Ofimatica',Grupo:'3-A'},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'}]},
+  {Dias:[{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]},
+  {Dias:[{esReservado:true,esReservadoOwner:true,Nombre:'Daniel Torres',Materia:'Desarrollo Web',Grupo:'5-A'},
   {esReservado:false},{esReservado:false},{esReservado:false},{esReservado:false}]}];
   //19 registros debe traer la consulta para que funcione :p
 
@@ -822,11 +853,11 @@ sacalControllers.controller("ClaseAdminCtrl", function ($rootScope,$scope,mostra
     var url = "insertClass.php?grupo="+grupo+"&materia="+materia+"&dia="+dia+"&hora="+hora+"&maestro="+maestro;
     callToWebService.postCall(url,
     function sucess(data){
-      var grupo = "";
-      var materia = "";
-      var maestro = "";
-      var dia = "";
-      var hora = "";
+      var grupo = -1;
+      var materia = -1;
+      var maestro = -1;
+      var dia = -1;
+      var hora =-1;
       $scope.llamadoInicial++;
     },
     function error(data){
@@ -844,11 +875,11 @@ sacalControllers.controller("ClaseAdminCtrl", function ($rootScope,$scope,mostra
     var url = "updateClass.php?grupo="+grupo+"&materia="+materia+"&dia="+dia+"&hora="+hora+"&maestro="+maestro+"&clase="+clase;
     callToWebService.postCall(url,
     function sucess(data){
-      var grupo = "";
-      var materia = "";
-      var maestro = "";
-      var dia = "";
-      var hora = "";
+      var grupo = -1;
+      var materia = -1;
+      var maestro = -1;
+      var dia = -1;
+      var hora = -1;
       $scope.llamadoInicial++;
     },
     function error(data){
@@ -858,7 +889,7 @@ sacalControllers.controller("ClaseAdminCtrl", function ($rootScope,$scope,mostra
 
   $scope.deleteMaestro = function(){
       var clase = $scope.clases[$scope.rowSelec].cla_id;
-      callToWebService.postCall("updateClass.php?id="+clase,
+      callToWebService.postCall("deleteClases.php?id="+clase,
       function sucess(data){
         $scope.clases.splice($scope.rowSelec,1);
         $scope.rowSelec = -1;
@@ -874,7 +905,7 @@ sacalControllers.controller("ClaseAdminCtrl", function ($rootScope,$scope,mostra
     $scope.editSelect = $scope.rowSelec;
     $scope.grupo = clase.gru_id;
     $scope.materia = clase.mat_id;
-    $scope.maestro = clase.usu_id;
+    $scope.maestro = clase.mae_id;
     $scope.dia = clase.dia_id;
     $scope.hora = clase.hor_id;
     $scope.editar = true;

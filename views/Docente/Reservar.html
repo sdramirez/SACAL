@@ -1,18 +1,17 @@
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 reservarDoncente">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 reservarDoncente" style="min-height:200px;">
 	<div class="btn-group pull-right">
-		<a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">Ver: <strong>{{opcSelect}} </strong><span class="caret"></span></a>
-		<ul class="dropdown-menu">
-			<li ng-repeat="lab in labDisponibles">
-				<a href="">{{lab.Nombre}}</a>
-			</li>
-		</ul>
+		<div>
+        	<select name="lab" ng-model="lab" ng-options="l.lab_id as l.lab_nombre for l in labs" required>
+          		<option value="">Seleccione un laboratorio</option>
+        	</select>
+      	</div>
 	</div>
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenedorLabs">
-		<h4 class="pull-left">Laboratorio I</h4>
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenedorLabs" ng-if="lab != undefined">
+		<h4 class="pull-left">{{labNombre}}</h4>
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 contenedorLabs">
 			<table class="table table-bordered pull-left horasTable">
 				<thead>
-					<tr><th>Dias / Horas</th></tr>
+					<tr><th>Dias <br> Horas</th></tr>
 					<tr ng-repeat="h in horas">
 						<th>{{h.Hor}}</th>
 					</tr>
