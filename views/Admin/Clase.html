@@ -1,0 +1,63 @@
+<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 formulario">
+  <form name="formMaestro" novalidate>
+      <legend ng-hide="editar">Registrar Clase</legend>
+      <legend ng-show="editar">Editar Clase</legend>
+      <div>
+        <select name="grupo" ng-model="grupo" ng-options="gru.gru_id as gru.gru_nombre for gru in grupos" required>
+          <option value="">Seleccione un grupo</option>
+        </select>
+      </div>
+      <div>
+        <select name="materia" ng-model="materia" ng-options="ma.mat_id as ma.mat_nombre for ma in materias" required>
+          <option value="">Seleccione una materia</option>
+        </select>
+      </div>
+      <div>
+        <select name="maestro" ng-model="maestro" ng-options="u.mae_id as u.usu_nombre for u in maestros" required>
+          <option value="">Seleccione un maestro</option>
+        </select>
+      </div>
+      <div>
+        <select name="dia" ng-model="dia" ng-options="d.dia_id as d.dia_nombre for d in dias" required>
+          <option value="">Seleccione un dia</option>
+        </select>
+      </div>
+      <div>
+        <select name="hora" ng-model="hora" ng-options="h.hor_id as (h.hor_inicio + ' - ' + h.hor_fin) for h in horas" required>
+          <option value="">Seleccione una hora</option>
+        </select>
+      </div>
+      <div class="text-right">
+          <button type="button" ng-show="opciones" class="btn btn-danger" ng-click="deleteMaestro()">Eliminar</button>
+          <button type="button" ng-show="opciones" class="btn btn-success" ng-click="editMaestro()">Editar</button>
+          <button ng-hide="editar" class="btn btn-success" ng-click="addMaestro(formMaestro)" ng-disabled="formMaestro.$invalid">Guardar</button>
+          <button ng-show="editar" class="btn btn-success" ng-click="editMaestroSave(formMaestro)" ng-disabled="formMaestro.$invalid">Guardar</button>
+      </div>
+  </form>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 listados">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>D&iacute;a</th>
+        <th>Hora</th>
+        <th>Materia</th>
+        <th>Maestro</th>
+        <th>Grupo</th>
+        <th>Periodo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="rowList" ng-repeat="c in clases" ng-click="select($index)" ng-class="{'rowSelec':rowSelec == $index}">
+        <td>{{$index + 1 }}</td>
+        <td>{{c.dia_nombre}}</td>
+        <td>{{c.hor_inicio}} <br> {{c.hor_fin}} </td>
+        <td>{{c.mat_nombre}}</td>
+        <td>{{c.usu_nombre}}</td>
+        <td>{{c.gru_nombre}}</td>
+        <td>{{c.gru_periodo_inicio}} <br> {{c.gru_periodo_fin}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

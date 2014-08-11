@@ -92,9 +92,10 @@ body {
     }
     .rowList{
         cursor: pointer;
+        &:hover{background-color:#DDD;}
     }
     .rowSelec{
-        background-color:#5cb85c;
+        background-color:#5cb85c !important;
         color:#FFF;
     }
     .inputDate{

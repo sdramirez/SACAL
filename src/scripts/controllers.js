@@ -278,15 +278,6 @@ sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,mostr
         mostrarNotificacion.error("Error al cargar datos");
       });
   }, true);
-
-  $scope.$watch("grupo", function (params, paramsOld) {
-    if(params != paramsOld){
-      for(var i in $scope.grupos){
-        if(params == $scope.grupos[i].gru_id)
-          $scope.grupoNombre = $scope.grupos[i].gru_nombre;
-      }
-    }
-  }, true);
  
   $scope.select = function(i){
     $scope.rowSelec = i;
@@ -458,7 +449,7 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
 
   $scope.deleteMaestro = function(){
       var alumno = $scope.maestros[$scope.rowSelec];
-      var url = "deleteUsers.php?idmaemat="+alumno.mae_mat_id+"&alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2";
+      var url = "deleteUsers.php?idmaemat="+alumno.mae_mat_id+"&alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2&clase="+alumno.cla_id;
       callToWebService.postCall(url,
       function sucess(data){
         $scope.maestros.splice($scope.rowSelec,1);
@@ -792,13 +783,100 @@ sacalControllers.controller("GrupoAdminCtrl", function ($rootScope,$scope,mostra
   };
 });
 
-sacalControllers.controller("ReservarAdminCtrl", function ($rootScope,$scope){
+sacalControllers.controller("ReservarAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
   
 });
 
-sacalControllers.controller("ControlAdminCtrl", function($rootScope,$scope){
+sacalControllers.controller("ControlAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
   
 });
-sacalControllers.controller("ClaseAdminCtrl", function($rootScope,$scope){
-  
+
+sacalControllers.controller("ClaseAdminCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService){
+  $scope.llamadoInicial = 1;
+  $scope.$watch("llamadoInicial", function (params, paramsOld) {
+    callToWebService.postCall("listClases.php",
+      function sucess(data){
+        $scope.clases = data.Clases;
+        $scope.grupos = data.Grupos;
+        $scope.materias = data.Materias;
+        $scope.maestros = data.Maestros;
+        $scope.dias = data.Dias;
+        $scope.horas = data.Horas;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al cargar datos");
+      });
+  }, true);
+ 
+  $scope.select = function(i){
+    $scope.rowSelec = i;
+    $scope.opciones = true;
+  };
+
+  $scope.addMaestro = function(form){
+    var grupo = form.grupo.$viewValue;
+    var materia = form.materia.$viewValue;
+    var maestro = form.maestro.$viewValue;
+    var dia = form.dia.$viewValue;
+    var hora = form.hora.$viewValue;
+    var url = "insertClass.php?grupo="+grupo+"&materia="+materia+"&dia="+dia+"&hora="+hora+"&maestro="+maestro;
+    callToWebService.postCall(url,
+    function sucess(data){
+      var grupo = "";
+      var materia = "";
+      var maestro = "";
+      var dia = "";
+      var hora = "";
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al crear clase");
+    });
+  };
+
+  $scope.editMaestroSave = function(form){
+    var grupo = form.grupo.$viewValue;
+    var materia = form.materia.$viewValue;
+    var maestro = form.maestro.$viewValue;
+    var dia = form.dia.$viewValue;
+    var hora = form.hora.$viewValue;
+    var clase = $scope.clases[$scope.editSelect].cla_id;
+    var url = "updateClass.php?grupo="+grupo+"&materia="+materia+"&dia="+dia+"&hora="+hora+"&maestro="+maestro+"&clase="+clase;
+    callToWebService.postCall(url,
+    function sucess(data){
+      var grupo = "";
+      var materia = "";
+      var maestro = "";
+      var dia = "";
+      var hora = "";
+      $scope.llamadoInicial++;
+    },
+    function error(data){
+      mostrarNotificacion.error("Error al actualizar clase");
+    });
+  };
+
+  $scope.deleteMaestro = function(){
+      var clase = $scope.clases[$scope.rowSelec].cla_id;
+      callToWebService.postCall("updateClass.php?id="+clase,
+      function sucess(data){
+        $scope.clases.splice($scope.rowSelec,1);
+        $scope.rowSelec = -1;
+        $scope.opciones = false;
+      },
+      function error(data){
+        mostrarNotificacion.error("Error al elimniar clase");
+      });
+  };
+
+  $scope.editMaestro = function(){
+    var clase = $scope.clases[$scope.rowSelec];
+    $scope.editSelect = $scope.rowSelec;
+    $scope.grupo = clase.gru_id;
+    $scope.materia = clase.mat_id;
+    $scope.maestro = clase.usu_id;
+    $scope.dia = clase.dia_id;
+    $scope.hora = clase.hor_id;
+    $scope.editar = true;
+  };
 });

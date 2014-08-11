@@ -5,11 +5,14 @@
 	$usuId = $_GET['usuario'];
 	$maeMate = $_GET['idmaemat'];
 	$typeUser = $_GET['type'];
+	$clase = $_GET['clase'];
 	$ejecute = "";
 	switch ($typeUser) {
 		case 1:
 			break;
 		case 2:
+			$sql = "DELETE FROM clase WHERE cla_id = $clase";
+			$ejecute = ejecutarConsulta($sql);
 			$sql = "DELETE FROM maestro_materia WHERE mae_mat_id = $maeMate";
 			$ejecute = ejecutarConsulta($sql);
 			$sql = "DELETE FROM maestro WHERE mae_id = $aluId";

@@ -231,7 +231,7 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
             if(data != "error"){
               succesCB(data);
             }
-            else{              
+            else{
               $location.path("/Login");
             }
           })
