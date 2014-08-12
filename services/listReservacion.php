@@ -3,7 +3,7 @@
 	require_once('../data/conexion.php');
 	$id = $_GET['id'];
 	$usu = $_GET['usu'];
-	$query = "SELECT * FROM reservacion INNER JOIN clase ON res_clase_id = cla_id WHERE res_clase_id = $id";
+	$query = "SELECT * FROM reservacion INNER JOIN clase ON res_clase_id = cla_id WHERE res_laboratorio_id = $id";
 	$result = leerTabla($query);
 	$output = array();
 	while ($r=mysql_fetch_assoc($result)){
@@ -15,7 +15,21 @@
 	while ($r=mysql_fetch_assoc($result)){
 		$output2[] = $r;
 	}
-	$output3["Clases"] = $output2;
-	$output3["Reservacion"] = $output;
-	print_r(json_encode($output3));
+	$query = "SELECT * FROM dia";
+	$result = leerTabla($query);
+	$output3 = array();
+	while ($r=mysql_fetch_assoc($result)){
+		$output3[] = $r;
+	}
+	$query = "SELECT * FROM hora";
+	$result = leerTabla($query);
+	$output4 = array();
+	while ($r=mysql_fetch_assoc($result)){
+		$output4[] = $r;
+	}
+	$output5["Clases"] = $output2;
+	$output5["Reservacion"] = $output;
+	$output5["Dias"] = $output3;
+	$output5["Horas"] = $output4;
+	print_r(json_encode($output5));
 ?>

@@ -99,16 +99,6 @@ sacalControllers.controller("DocenteCtrl", function ($rootScope,$scope,$state,$l
   };
 });
 sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService,$modal) {
-  
-  $scope.dias=[{Dia:"Lunes"},{Dia:"Martes"},{Dia:"Miercoles"},{Dia:"Jueves"},
-  {Dia:"Viernes"}];
-  $scope.horas=[{Hor:'7:00  7:50'},{Hor:'7:50  8:40'},{Hor:'8:40  9:30'},
-  {Hor:'9:30  10:20'},{Hor:'10:20  11:10'},{Hor:'11:10  12:00'},
-  {Hor:'12:00  12:50'},{Hor:'12:50  13:40'},{Hor:'13:40  14:30'},
-  {Hor:'14:30  15:20'},{Hor:'15:20  16:10'},{Hor:'16:10  17:00'},
-  {Hor:'17:00  17:50'},{Hor:'17:50  18:40'},{Hor:'18:40  19:30'},
-  {Hor:'19:30  20:20'},{Hor:'20:20  21:10'},{Hor:'21:10  22:00'},
-  {Hor:'22:00 22:50'}];
 
   $scope.llamadoInicial = 1;
   $scope.$watch("llamadoInicial", function (params, paramsOld) {
@@ -128,10 +118,22 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,m
         if(params == $scope.labs[i].lab_id)
           $scope.labNombre = $scope.labs[i].lab_nombre;
       }
-      callToWebService.postCall("listReservacion.php?id=params&usu="+$scope.$parent.$parent.userId,
+      callToWebService.postCall("listReservacion.php?id="+params+"&usu="+$scope.$parent.$parent.userId,
       function sucess(data){
+        //clases necesarias para saver que horas puede reservar...
         $scope.clases = data.Clases;
+        //reservaciones informacion saobre reservaciones
         $scope.reservacion = data.Reservacion;
+        $scope.dias = data.Dias;
+        $scope.horas = data.Horas;
+        $scope.ArrayReservacion = [];
+        $scope.arrayFinal = [];
+        
+        for(var i in $scope.horas){
+          $scope.ArrayReservacion.push({
+            Dias:$scope.dias
+          });
+        }
         debugger;
       },
       function error(data){
