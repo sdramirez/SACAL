@@ -126,10 +126,19 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,m
         $scope.reservacion = data.Reservacion;
         $scope.dias = data.Dias;
         $scope.horas = data.Horas;
+        
+        for(var h in $scope.horas){
+         for(var d in $scope.dias){
+          for(var r in $scope.reservacion){
+            if($scope.reservacion[r].hor_id ){
+
+            }
+          }
+         }
+        }
         $scope.ArrayReservacion = [];
         $scope.arrayFinal = [];
-        
-        for(var i in $scope.horas){
+        for(var a in $scope.horas){
           $scope.ArrayReservacion.push({
             Dias:$scope.dias
           });
@@ -381,7 +390,7 @@ sacalControllers.controller("AlumnoAdminCtrl", function ($rootScope,$scope,mostr
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar alumno");
+        mostrarNotificacion.error("Error al eliminar alumno");
       });
   };
 
@@ -490,7 +499,8 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar maestro");
+        //mostrarNotificacion.error("Error al eliminar maestro");
+        $scope.llamadoInicial++;
       });
   };
 
@@ -558,7 +568,7 @@ sacalControllers.controller("MateriaAdminCtrl", function ($rootScope,$scope,most
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar materia");
+        mostrarNotificacion.error("Error al eliminar materia");
       });
   };
 
@@ -659,7 +669,7 @@ sacalControllers.controller("HoraAdminCtrl", function ($rootScope,$scope,mostrar
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar administrador");
+        mostrarNotificacion.error("Error al eliminar administrador");
       });
   };
 
@@ -730,7 +740,7 @@ sacalControllers.controller("LaboratorioAdminCtrl", function ($rootScope,$scope,
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar materia");
+        mostrarNotificacion.error("Error al eliminar materia");
       });
   };
 
@@ -802,7 +812,7 @@ sacalControllers.controller("GrupoAdminCtrl", function ($rootScope,$scope,mostra
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar grupo");
+        mostrarNotificacion.error("Error al eliminar grupo");
       });
   };
 
@@ -898,7 +908,7 @@ sacalControllers.controller("ClaseAdminCtrl", function ($rootScope,$scope,mostra
         $scope.opciones = false;
       },
       function error(data){
-        mostrarNotificacion.error("Error al elimniar clase");
+        mostrarNotificacion.error("Error al eliminar clase");
       });
   };
 

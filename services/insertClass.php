@@ -10,7 +10,14 @@
 	$r = leerRegistro($consulta);
 	if($r != "" || $r != null){
 		$id = $r['mae_mat_id'];
-		insertClass($grupo,$id,$hora,$dia);
+		$consulta = "SELECT cla_id FROM clase WHERE cla_grupo_id = $grupo AND cla_maestro_materia_id = $id AND cla_hora_id = $hora AND cla_dia_id = $dia";
+		$r = leerRegistro($consulta);
+		if($r != "" || $r != null){
+			print_r("error");
+		}
+		else{
+			insertClass($grupo,$id,$hora,$dia);	
+		}
 	}
 	else{
 		$con2 = "INSERT INTO maestro_materia (mae_mat_id_materia,mae_mat_id_maestro) VALUES ($materia, $maestro)";
