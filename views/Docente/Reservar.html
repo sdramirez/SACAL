@@ -24,8 +24,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="row in ArrayReservacion">
-						<td ng-repeat="col in row.Dias">{{$parent.$index}} - {{$index}}</td>
+					<tr ng-repeat="row in dataHoras">
+						<td ng-repeat="col in row.Dias" ng-class="{'reservadoBlue':(col.esReservado && !col.esReservadoOwner), 'disponible':!col.esReservado, 'reservadoRed':col.esReservadoOwner}">
+							<span ng-show="col.esReservado && !col.esReservadoOwner" ng-click="infoPopOver($parent.$index,$index)">Reservado</span>
+							<span ng-show="col.esReservadoOwner" ng-click="cancelar($parent.$index,$index)">Cancelar</span>
+							<span ng-show="!col.esReservado" ng-click="confirmar($parent.$index,$index)">Reservar</span>
+						</td>
 					</tr>
 				</tbody>
 			</table>

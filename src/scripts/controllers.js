@@ -127,7 +127,7 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,m
         $scope.dias = data.Dias;
         $scope.horas = data.Horas;
         
-        for(var h in $scope.horas){
+        /*for(var h in $scope.horas){
          for(var d in $scope.dias){
           for(var r in $scope.reservacion){
             if($scope.reservacion[r].hor_id ){
@@ -135,15 +135,15 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,m
             }
           }
          }
-        }
-        $scope.ArrayReservacion = [];
+        }*/
+      /*  $scope.ArrayReservacion = [];
         $scope.arrayFinal = [];
         for(var a in $scope.horas){
           $scope.ArrayReservacion.push({
             Dias:$scope.dias
           });
         }
-        debugger;
+        debugger;*/
       },
       function error(data){
         mostrarNotificacion.error("Error al cargar datos");
@@ -265,26 +265,42 @@ sacalControllers.controller("ReservarDocenteCtrl", function ($rootScope,$scope,m
     };
 
 });
-sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope) {
+sacalControllers.controller("ControlDocenteCtrl", function ($rootScope,$scope,mostrarNotificacion,callToWebService2) {
+  
+  function llamado(k){
+    callToWebService2.postCall2("http://192.168.1.65/?"+ k,
+    function sucess(data){
+      var aa = data;
+      debugger;
+    },
+    function error(data){
+      var aa = data;
+      debugger;
+    });
+  }
   $scope.puerta = true;
   $scope.controlPuerta = function(bool){
     $scope.puerta = bool;
-  };
-  $scope.proyector = true;
-  $scope.controlProyect = function(bool){
-    $scope.proyector = bool;
-  };
-  $scope.compu = true;
-  $scope.controlCompu = function(bool){
-    $scope.compu = bool;
+    if(bool)
+      llamado("L6=1");
+    else
+      llamado("L6=0");
   };
   $scope.luz = true;
   $scope.controlLuz = function(bool){
     $scope.luz = bool;
+    if(bool)
+      llamado("L4=0");
+    else
+      llamado("L4=1");
   };
   $scope.aire = true;
   $scope.controlAire = function(bool){
     $scope.aire = bool;
+    if(bool)
+      llamado("L3=1");
+    else
+      llamado("L3=0");
   };
 });
 sacalControllers.controller("ReporteDocenteCtrl", function ($rootScope,$scope){
@@ -491,7 +507,7 @@ sacalControllers.controller("MaestroAdminCtrl", function ($rootScope,$scope,most
 
   $scope.deleteMaestro = function(){
       var alumno = $scope.maestros[$scope.rowSelec];
-      var url = "deleteUsers.php?idmaemat="+alumno.mae_mat_id+"&alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2&clase="+alumno.cla_id;
+      var url = "deleteUsers.php?idmaemat="+alumno.mae_mat_id+"&alumno="+alumno.mae_id+"&usuario="+alumno.usu_id+"&type=2";
       callToWebService.postCall(url,
       function sucess(data){
         $scope.maestros.splice($scope.rowSelec,1);

@@ -1,7 +1,7 @@
 <?php
 	error_reporting(0);
 	require_once('../data/conexion.php');
-	$query = "SELECT usu_id,usu_nombre,usu_usuario_num,usu_contrasena,usu_correo,mae_id,mae_mat_id,mat_id,mat_nombre,cla_id FROM usuario INNER JOIN maestro on usu_id = mae_usuario_id INNER JOIN maestro_materia on mae_id = mae_mat_id_maestro INNER JOIN materia ON mae_mat_id_materia = mat_id LEFT JOIN clase ON mae_mat_id = cla_maestro_materia_id ORDER BY usu_nombre";
+	$query = "SELECT usu_id,usu_nombre,usu_usuario_num,usu_contrasena,usu_correo,mae_id,mae_mat_id,mat_id,mat_nombre FROM usuario INNER JOIN maestro on usu_id = mae_usuario_id INNER JOIN maestro_materia on mae_id = mae_mat_id_maestro INNER JOIN materia ON mae_mat_id_materia = mat_id ORDER BY usu_nombre";
 	$result = leerTabla($query);
 	$output = array();
 	while ($r=mysql_fetch_assoc($result)){

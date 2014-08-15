@@ -218,7 +218,6 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
         .error(function (data){
         });
     };
-
 }]).service('validaSesion', [
   '$http','$location',
     function ($http,$location){
@@ -240,4 +239,23 @@ sacalApp.config(function($stateProvider,$urlRouterProvider) {
           });
         };
       }
-]);
+]).service('callToWebService2', [
+  '$http',
+  function ($http) {
+    this.postCall2 = function (endpoint, succesCB, errorCB) {
+        $http({
+            method:'POST',
+            url:endpoint
+        })
+        .success(function (data){
+          if (data == "error") {
+            errorCB(data);
+          }
+          else{
+            succesCB(data);
+          }
+        })
+        .error(function (data){
+        });
+    };
+}]);
